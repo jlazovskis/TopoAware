@@ -8,4 +8,10 @@ The goal of this project is to use topological tools, in terms of computational 
 * [gudhi](https://gudhi.inria.fr) : sparsification methods
 
 ## Usage
-TODO
+ First compile the program, using your favorite compiler. Example below with `g++`.
+
+    g++ -o hvt -I include hvt.cpp
+
+Then run the program on a data set. Example with provided data below.
+
+    ./hvt examples/test_shape.csv
