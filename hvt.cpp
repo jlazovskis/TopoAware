@@ -7,6 +7,9 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cassert>
+#include <cmath>
+#include <numeric>
 
 // hvt
 namespace hvt {
@@ -43,10 +46,23 @@ int main (int argc, char** argv) {
 	hvt::simplicial_complex cpx;
 
 	// Read input file
-	cpx.load_point_cloud(filename, threshold);
+    bool read_successful;
+	read_successful = cpx.load_point_cloud(filename);
+    if( !read_successful ) {
+        std::cerr << "Error opening file " << filename << std::endl;
+        return 0;
+    }
+
+    // Find neighbors
+    bool compute_successful;
+	compute_successful = cpx.get_neighbors(threshold);
+    if( !compute_successful ) {
+        std::cerr << "Error computing neighbors" << std::endl;
+        return 0;
+    }
 
 	// Testing
-	cpx.print_me();
+	cpx.mat.print_me();
 
 	return 1;
 }
