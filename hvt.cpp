@@ -2,67 +2,92 @@
 // Created by Jānis Lazovskis 
 // GPL-3 license 
 
-// stl
-#include <vector>
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <cassert>
-#include <cmath>
-#include <numeric>
+#include <misc.h>
+#include <point_cloud.h>
 
-// hvt
-namespace hvt {
-    typedef int64_t index;
-}
-
-#include <simplicial_complex.h>
-
-static const size_t num_coefficient_bits = 8;
-
-
+// Main runtime
 int main (int argc, char** argv) {
-	const char* filename = nullptr;
-	float threshold;
+	const char* filename_in = nullptr;
+	const char* filename_out = nullptr;
+	float dist_barycenter;
+	float dist_sparsify;
 
 	// Read arguments
 	for (int i = 1; i < argc; ++i) {
 		const std::string arg(argv[i]);
 
-		// Threshold
-		if (arg == "--threshold") {
+		// Input file
+		if (arg == "--input") {
+			filename_in = argv[++i];
+		}
+
+		// Output file
+		if (arg == "--output") {
+			filename_out = argv[++i];
+		}
+
+		// Threshold for adding barycenters
+		if (arg == "--bdist") {
 			std::string parameter = std::string(argv[++i]);
 			size_t next_pos;
-			threshold = std::stof(parameter, &next_pos);
+			dist_barycenter = std::stof(parameter, &next_pos);
 
-		// Main file
-		} else {
-			filename = argv[i];
+		// Minimum distance for sparsifying
+		} else if (arg == "--sdist") {
+			std::string parameter = std::string(argv[++i]);
+			size_t next_pos;
+			dist_sparsify = std::stof(parameter, &next_pos);
 		}
+
 	}
 
-
-	// Initialize distance matrix class
-	hvt::simplicial_complex cpx;
+	// Initialize point cloud class
+	hvt::point_cloud data_step0;
 
 	// Read input file
     bool read_successful;
-	read_successful = cpx.load_point_cloud(filename);
+	read_successful = data_step0.load_points( filename_in );
     if( !read_successful ) {
-        std::cerr << "Error opening file " << filename << std::endl;
+        std::cerr << "Error opening file " << filename_in << std::endl;
         return 0;
     }
+
+	// TESTING
+	data_step0.print_me();
 
     // Find neighbors
     bool compute_successful;
-	compute_successful = cpx.get_neighbors(threshold);
+	compute_successful = data_step0.get_neighbors( dist_barycenter );
     if( !compute_successful ) {
-        std::cerr << "Error computing neighbors" << std::endl;
+        std::cerr << "Error computing neighbors at threshold " << dist_barycenter << std::endl;
         return 0;
     }
 
-	// Testing
-	cpx.mat.print_me();
+    // Add barycenters
+	hvt::point_cloud data_step1;
+    bool enrich_successful;
+	enrich_successful = data_step1.split_points( data_step0 );
+    if( !enrich_successful ) {
+        std::cerr << "Error adding barycenters at threshold " << dist_barycenter << std::endl;
+        return 0;
+    }
+
+    // Sparsify
+	hvt::point_cloud data_step2;
+    bool sparsify_successful;
+	sparsify_successful = data_step2.sparsify_points( data_step1, dist_sparsify );
+    if( !sparsify_successful ) {
+        std::cerr << "Error sparsifying at minimum distance " << dist_sparsify << std::endl;
+        return 0;
+    }
+
+    // Export
+    bool write_successful;
+	write_successful = data_step2.export_csv( filename_out );
+    if( !write_successful ) {
+        std::cerr << "Error writing to file " << filename_out << std::endl;
+        return 0;
+    }
 
 	return 1;
 }

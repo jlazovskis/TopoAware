@@ -12,6 +12,6 @@ The goal of this project is to use topological tools, in terms of computational 
 
     g++ -o hvt -I include hvt.cpp
 
-Then run the program on a data set. Example with provided data below.
+Then run the program on a data set, indicating the distance `bdist` at which to add barycenters for 1-simplices and 2-simplices, and the distance `sdist` at which to sparsify by maintaining this minimum distance between any two points. Example with provided data below.
 
-    ./hvt examples/test_shape.csv
+    ./hvt --input examples/test_shape.csv --output examples/test_out.csv --bdist 0.05 --sdist 0.5
