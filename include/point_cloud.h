@@ -10,7 +10,7 @@ namespace hvt {
 			// A list of neighbors for each point
 			std::vector<std::vector<hvt::index_diameter_t>> neighbors;
 
-			// Distance between pairs of points at given indices
+			// Distance between pairs of points at given indices (from https://github.com/Ripser)
 			float dist(const hvt::index i, const hvt::index j) const {
 				assert(i < points.size());
 				assert(j < points.size());
@@ -71,26 +71,66 @@ namespace hvt {
 				return true;
 			};
 
-			// Compute neighbors at a certain distance
-			bool get_neighbors( const float threshold ) {
-				return true;
+			// Compute neighbors at a certain distance (adapted from https://github.com/Ripser)
+			// Only find neihgbors at higher indices, to skip duplicates later
+			void find_neighbors( const hvt::value threshold ) {
+
+				// Get container for data
+				this->neighbors = neighbors;
+
+				// Iterate
+				for ( hvt::index i = 0; i < points.size(); ++i ) {
+
+					// Make temporary neighbor vector
+                    std::vector< hvt::index_diameter_t > temp_nb;
+					for (hvt::index j = i+1; j < points.size(); ++j) {
+						hvt::value d = dist(i, j);
+						if (d <= threshold) {
+							std::cout << i << " " << j << "\n";
+							temp_nb.push_back({j, d});
+						}
+					}
+
+					// Register the neighbors
+					neighbors.push_back(temp_nb);
+				}
 			};
+
+			// Number of points in point cloud
+			hvt::index get_size() {
+				return points.size();
+			}
 
 			// Export to file
 			bool export_csv( const std::string filename ) {
 				return true;
 			}
 
-			// For testing
+			// TESTING
 			void print_me() {
-				this->points = points;
-				for ( int col = 0; col < points.size(); col++ ) {
-					for (const hvt::value& value : points[col]) { 
-						std::cout << value << ",";
-					}
-				std::cout << "\n";
-				}
-			std::cout << std::endl;
+
+				// std::cout << dist(10,100);
+
+				// this->points = points;
+				// for ( int col = 0; col < points.size(); col++ ) {
+				// 	for (const hvt::value& value : points[col]) { 
+				// 		std::cout << value << ",";
+				// 	}
+				// std::cout << "\n";
+				// }
+				// std::cout << std::endl;
+			
+				// this->neighbors = neighbors;
+				std::cout << neighbors.size() << "\n";
+				// for ( int col = 0; col < neighbors.size(); col++ ) {
+				// 	for (const hvt::index_diameter_t& index_diameter_t : neighbors[col]) { 
+				// 		std::cout << get_index(index_diameter_t) << " at " << get_diameter(index_diameter_t) << ",";
+				// 	}
+				// std::cout << "\n";
+				// }
+				// std::cout << std::endl;				
+
+
 			};
 
 	};

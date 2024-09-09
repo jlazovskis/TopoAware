@@ -9,8 +9,8 @@
 int main (int argc, char** argv) {
 	const char* filename_in = nullptr;
 	const char* filename_out = nullptr;
-	float dist_barycenter;
-	float dist_sparsify;
+	hvt::value dist_barycenter;
+	hvt::value dist_sparsify;
 
 	// Read arguments
 	for (int i = 1; i < argc; ++i) {
@@ -45,49 +45,42 @@ int main (int argc, char** argv) {
 	hvt::point_cloud data_step0;
 
 	// Read input file
-    bool read_successful;
+	bool read_successful;
 	read_successful = data_step0.load_points( filename_in );
-    if( !read_successful ) {
-        std::cerr << "Error opening file " << filename_in << std::endl;
-        return 0;
-    }
+	if ( !read_successful ) { std::cerr << "Error opening file " << filename_in << std::endl; return 0; }
+	else { std::cout << "File loaded with " << data_step0.get_size() << " points" << std::endl;}
+
+	// Find neighbors
+	data_step0.find_neighbors( dist_barycenter );
 
 	// TESTING
 	data_step0.print_me();
 
-    // Find neighbors
-    bool compute_successful;
-	compute_successful = data_step0.get_neighbors( dist_barycenter );
-    if( !compute_successful ) {
-        std::cerr << "Error computing neighbors at threshold " << dist_barycenter << std::endl;
-        return 0;
-    }
-
-    // Add barycenters
+	// Add barycenters
 	hvt::point_cloud data_step1;
-    bool enrich_successful;
+	bool enrich_successful;
 	enrich_successful = data_step1.split_points( data_step0 );
-    if( !enrich_successful ) {
-        std::cerr << "Error adding barycenters at threshold " << dist_barycenter << std::endl;
-        return 0;
-    }
+	if( !enrich_successful ) {
+		std::cerr << "Error adding barycenters at threshold " << dist_barycenter << std::endl;
+		return 0;
+	}
 
-    // Sparsify
+	// Sparsify
 	hvt::point_cloud data_step2;
-    bool sparsify_successful;
+	bool sparsify_successful;
 	sparsify_successful = data_step2.sparsify_points( data_step1, dist_sparsify );
-    if( !sparsify_successful ) {
-        std::cerr << "Error sparsifying at minimum distance " << dist_sparsify << std::endl;
-        return 0;
-    }
+	if( !sparsify_successful ) {
+		std::cerr << "Error sparsifying at minimum distance " << dist_sparsify << std::endl;
+		return 0;
+	}
 
-    // Export
-    bool write_successful;
+	// Export
+	bool write_successful;
 	write_successful = data_step2.export_csv( filename_out );
-    if( !write_successful ) {
-        std::cerr << "Error writing to file " << filename_out << std::endl;
-        return 0;
-    }
+	if( !write_successful ) {
+		std::cerr << "Error writing to file " << filename_out << std::endl;
+		return 0;
+	}
 
 	return 1;
 }
