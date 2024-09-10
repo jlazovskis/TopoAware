@@ -53,9 +53,6 @@ int main (int argc, char** argv) {
 	// Find neighbors
 	data_step0.find_neighbors( dist_barycenter );
 
-	// TESTING
-	data_step0.print_me();
-
 	// Add barycenters
 	hvt::point_cloud data_step1;
 	bool enrich_successful;
@@ -64,6 +61,10 @@ int main (int argc, char** argv) {
 		std::cerr << "Error adding barycenters at threshold " << dist_barycenter << std::endl;
 		return 0;
 	}
+	else { std::cout << "New point cloud created with " << data_step1.get_size() << " points by adding barycenters" << std::endl; }
+
+	// TESTING
+	// data_step0.print_me();
 
 	// Sparsify
 	hvt::point_cloud data_step2;

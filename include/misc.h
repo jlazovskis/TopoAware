@@ -17,6 +17,7 @@ namespace hvt {
 	// A pair type to hold an index and a distance, meant for neighbors of a point
 	// Adapted from https://github.com/Ripser
 	typedef std::pair<hvt::index, hvt::value> index_diameter_t;
+	typedef std::vector<hvt::index_diameter_t> my_neighbors;
 	hvt::index get_index(const index_diameter_t& i) { return i.first; }
 	hvt::value get_diameter(const index_diameter_t& i) { return i.second; }
 

@@ -8,7 +8,7 @@ namespace hvt {
 			std::vector<std::vector<hvt::value>> points;
 
 			// A list of neighbors for each point
-			std::vector<std::vector<hvt::index_diameter_t>> neighbors;
+			std::vector<hvt::my_neighbors> neighbors;
 
 			// Distance between pairs of points at given indices (from https://github.com/Ripser)
 			float dist(const hvt::index i, const hvt::index j) const {
@@ -60,8 +60,40 @@ namespace hvt {
 			};
 
 			// (2/3) Declare points by: adding barycenters from another point cloud
-			bool split_points( const hvt::point_cloud initial_point_cloud ) {
-				// TODO: check that the input point cloud has points and neighbors initialized
+			bool split_points( hvt::point_cloud initial_point_cloud ) {
+
+				// Check that the input point cloud has points initialized
+				assert (initial_point_cloud.get_size() > 0);
+
+				// Populate the points
+				for ( hvt::index i = 0; i < initial_point_cloud.get_size(); i++ ) {
+	
+					// Temporary containers
+					std::vector<hvt::value> current_point;
+					hvt::my_neighbors current_neighbors;
+					initial_point_cloud.get_point(i,current_point);
+					initial_point_cloud.get_neighbors(i,current_neighbors);
+
+					// Add same point
+					std::vector< hvt::value > point;
+					for (const hvt::value& value : current_point) { 
+						point.push_back(value);
+					}
+					points.push_back(point);
+
+					// Add midpoint of every two points
+					for (const hvt::index_diameter_t& index_diameter_t : current_neighbors) {
+						std::vector<hvt::value> current_point_b;
+						initial_point_cloud.get_point(get_index(index_diameter_t),current_point_b);
+
+					}
+
+						// Add average of every three points
+
+					 
+				}
+
+
 				return true;
 			};
 
@@ -99,6 +131,19 @@ namespace hvt {
 			// Number of points in point cloud
 			hvt::index get_size() {
 				return points.size();
+			}
+
+			// Point at a given index
+			// Sets input reference to requested point
+			void get_point( const hvt::index index, std::vector<hvt::value>& my_point ) {
+				my_point = points[index];
+			}
+
+
+			// Neighbors of a point at a given index
+			// Sets input reference to requested neighbor
+			void get_neighbors( const hvt::index index, hvt::my_neighbors& my_neighbors ) {
+				my_neighbors = neighbors[index];
 			}
 
 			// Export to file
