@@ -5,10 +5,10 @@ namespace hvt {
 	class point_cloud {
 		private:
 			// The points
-			std::vector<std::vector<hvt::value>> points;
+			std::vector< hvt::point > points;
 
 			// A list of neighbors for each point
-			std::vector<hvt::my_neighbors> neighbors;
+			std::vector< hvt::neighbors > all_neighbors;
 
 			// Distance between pairs of points at given indices (from https://github.com/Ripser)
 			float dist(const hvt::index i, const hvt::index j) const {
@@ -48,7 +48,7 @@ namespace hvt {
 
 				hvt::value value;
 				while (std::getline(input_stream, line)) {
-					std::vector< hvt::value > point;
+					hvt::point point;
 					std::istringstream s(line);
 					while (s >> value) {
 						point.push_back(value);
@@ -60,40 +60,69 @@ namespace hvt {
 			};
 
 			// (2/3) Declare points by: adding barycenters from another point cloud
-			bool split_points( hvt::point_cloud initial_point_cloud ) {
+			bool split_points( hvt::point_cloud initial_point_cloud, std::vector<int>& points_added ) {
+				std::vector<int> new_point_count;
 
 				// Check that the input point cloud has points initialized
 				assert (initial_point_cloud.get_size() > 0);
 
 				// Populate the points
+				int counter1 = 0;
+				int counter2 = 0;
 				for ( hvt::index i = 0; i < initial_point_cloud.get_size(); i++ ) {
 	
 					// Temporary containers
-					std::vector<hvt::value> current_point;
-					hvt::my_neighbors current_neighbors;
+					hvt::point current_point;
+					hvt::neighbors current_neighbors;
 					initial_point_cloud.get_point(i,current_point);
 					initial_point_cloud.get_neighbors(i,current_neighbors);
 
 					// Add same point
-					std::vector< hvt::value > point;
+					hvt::point point;
 					for (const hvt::value& value : current_point) { 
 						point.push_back(value);
 					}
 					points.push_back(point);
 
-					// Add midpoint of every two points
-					for (const hvt::index_diameter_t& index_diameter_t : current_neighbors) {
-						std::vector<hvt::value> current_point_b;
-						initial_point_cloud.get_point(get_index(index_diameter_t),current_point_b);
+					// Iterate through neighbors
+					for ( int j = 0; j < current_neighbors.size() ; j++ ) {
 
+						// Add midpoint of every two points
+						std::vector< hvt::point > neighboring_points;
+						hvt::point current_point_b;
+						initial_point_cloud.get_point(get_index(current_neighbors[j]),current_point_b);
+						neighboring_points.push_back(current_point_b);
+
+						// Declare, compute, record new point
+						hvt::point new_point;
+						hvt::point_average( current_point, neighboring_points, new_point );
+						points.push_back(new_point);
+						counter1 += 1;
+					
+						// Iterate once again for triples
+						for ( int k = j+1 ; k < current_neighbors.size() ; k++ ) {
+
+							// Add another neighboring points
+							hvt::point current_point_c;
+							initial_point_cloud.get_point(get_index(current_neighbors[k]),current_point_c);
+							neighboring_points.push_back(current_point_c);
+
+							// Declare, compute, record new point
+							hvt::point new_point;
+							hvt::point_average( current_point, neighboring_points, new_point );
+							points.push_back(new_point);
+							counter2 += 1;
+
+							// Drop last element
+							neighboring_points.pop_back();
+						}
 					}
-
-						// Add average of every three points
-
-					 
 				}
 
-
+				// Record progress and finish
+				new_point_count.push_back(counter1);
+				new_point_count.push_back(counter2);
+				points_added = new_point_count;
 				return true;
 			};
 
@@ -108,7 +137,7 @@ namespace hvt {
 			void find_neighbors( const hvt::value threshold ) {
 
 				// Get container for data
-				this->neighbors = neighbors;
+				this->all_neighbors = all_neighbors;
 
 				// Iterate
 				for ( hvt::index i = 0; i < points.size(); ++i ) {
@@ -118,13 +147,13 @@ namespace hvt {
 					for (hvt::index j = i+1; j < points.size(); ++j) {
 						hvt::value d = dist(i, j);
 						if (d <= threshold) {
-							std::cout << i << " " << j << "\n";
+							// std::cout << i << " " << j << "\n";
 							temp_nb.push_back({j, d});
 						}
 					}
 
 					// Register the neighbors
-					neighbors.push_back(temp_nb);
+					all_neighbors.push_back(temp_nb);
 				}
 			};
 
@@ -135,15 +164,15 @@ namespace hvt {
 
 			// Point at a given index
 			// Sets input reference to requested point
-			void get_point( const hvt::index index, std::vector<hvt::value>& my_point ) {
+			void get_point( const hvt::index index, hvt::point& my_point ) {
 				my_point = points[index];
 			}
 
 
 			// Neighbors of a point at a given index
 			// Sets input reference to requested neighbor
-			void get_neighbors( const hvt::index index, hvt::my_neighbors& my_neighbors ) {
-				my_neighbors = neighbors[index];
+			void get_neighbors( const hvt::index index, hvt::neighbors& neighbors ) {
+				neighbors = all_neighbors[index];
 			}
 
 			// Export to file
@@ -166,7 +195,7 @@ namespace hvt {
 				// std::cout << std::endl;
 			
 				// this->neighbors = neighbors;
-				std::cout << neighbors.size() << "\n";
+				std::cout << all_neighbors.size() << "\n";
 				// for ( int col = 0; col < neighbors.size(); col++ ) {
 				// 	for (const hvt::index_diameter_t& index_diameter_t : neighbors[col]) { 
 				// 		std::cout << get_index(index_diameter_t) << " at " << get_diameter(index_diameter_t) << ",";

@@ -55,13 +55,17 @@ int main (int argc, char** argv) {
 
 	// Add barycenters
 	hvt::point_cloud data_step1;
+	std::vector<int> points_added;
 	bool enrich_successful;
-	enrich_successful = data_step1.split_points( data_step0 );
+	enrich_successful = data_step1.split_points( data_step0, points_added );
 	if( !enrich_successful ) {
 		std::cerr << "Error adding barycenters at threshold " << dist_barycenter << std::endl;
 		return 0;
 	}
-	else { std::cout << "New point cloud created with " << data_step1.get_size() << " points by adding barycenters" << std::endl; }
+	else {
+		std::cout << "New point cloud created with " << data_step1.get_size() << " points by adding barycenters ";
+		std::cout << "(" << points_added[0] << " by splitting pairs, " << points_added[1] << " by splitting triples)" << std::endl; 
+	}
 
 	// TESTING
 	// data_step0.print_me();
