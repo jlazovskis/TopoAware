@@ -1,4 +1,5 @@
 // This file is part of hypervolume-t 
+// Header file for the point_cloud class
 
 namespace hvt {
 
@@ -157,6 +158,11 @@ namespace hvt {
 				}
 			};
 
+			// Dimension of points in point cloud
+			hvt::index get_dim() {
+				return points[0].size();
+			}
+
 			// Number of points in point cloud
 			hvt::index get_size() {
 				return points.size();
@@ -176,7 +182,30 @@ namespace hvt {
 			}
 
 			// Export to file
-			bool export_csv( const std::string filename ) {
+			bool export_points( const std::string filename ) {
+  				
+				// Set up file for writing
+  				std::ofstream outfile;
+  				outfile.open(filename);
+
+  				// Write headers
+  				outfile << "x0";
+				for ( int i = 1; i < get_dim(); i++ ) {
+  					outfile << ",x" << i;
+				}
+				outfile << "\n";
+
+				// Write values
+				for ( const hvt::point& point : points ) { 
+  					outfile << point[0];
+					for ( int i = 1; i < get_dim(); i++ ) {
+	  					outfile << "," << point[i];
+	  				}
+	  				outfile << "\n";
+	  			}
+
+	  			// Close file and exit
+				outfile.close();
 				return true;
 			}
 

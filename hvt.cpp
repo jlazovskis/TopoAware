@@ -81,7 +81,7 @@ int main (int argc, char** argv) {
 
 	// Export
 	bool write_successful;
-	write_successful = data_step2.export_csv( filename_out );
+	write_successful = data_step1.export_points( filename_out );
 	if( !write_successful ) {
 		std::cerr << "Error writing to file " << filename_out << std::endl;
 		return 0;

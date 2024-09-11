@@ -1,4 +1,5 @@
 // This file is part of hypervolume-t 
+// Header file for all includes, special types, math functions
 
 // stl
 #include <vector>
@@ -45,7 +46,7 @@ namespace hvt {
 			}
 		}
 
-		// Dvide each coordinate by number of points
+		// Divide each coordinate by number of points
 		for ( int i = 0; i < dim; i++ ) {
 			target[i] = target[i]/dim;
 		}
