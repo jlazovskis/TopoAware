@@ -13,7 +13,7 @@
 // hvt
 namespace hvt {
     typedef int64_t index;
-	typedef float value;
+	typedef double value;
 	typedef std::vector< hvt::value > point;
 
 	// A pair type to hold an index and a distance, meant for neighbors of a point

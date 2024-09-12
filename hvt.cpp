@@ -82,10 +82,7 @@ int main (int argc, char** argv) {
 	// Export
 	bool write_successful;
 	write_successful = data_step1.export_points( filename_out );
-	if( !write_successful ) {
-		std::cerr << "Error writing to file " << filename_out << std::endl;
-		return 0;
-	}
-
+	if( !write_successful ) { std::cerr << "Error writing to file " << filename_out << std::endl; return 0; }
+	else { std::cout << "File exported with " << data_step1.get_size() << " points" << std::endl;}
 	return 1;
 }
