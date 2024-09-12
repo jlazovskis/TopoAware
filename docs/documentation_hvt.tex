@@ -1,0 +1,32 @@
+\documentclass[a4paper]{amsart}
+
+\usepackage{amsmath,amsthm,amssymb,verbatim,url}
+\usepackage[final,pdftex,colorlinks=false,pdfborder={0 0 0}]{hyperref}
+
+\begin{document}
+\title{Documentation: hypervolume-t}
+
+\author{Jānis Lazovskis}
+\address{Riga Technical University, Riga, Latvia}
+\email{janis.lazovskis\_1@rtu.lv}
+\urladdr{https://www.jlazovskis.com}
+
+\maketitle
+
+\noindent
+The software \textsc{hypervolume-t} is inspired by Benjamin Blonder's
+\href{https://github.com/bblonder/hypervolume}{\textsc{hypervolume}}. Instead of using a kernel density estimator, this software uses a topologically-aware method to generate large, uniformly-distributed samples based on the input point cloud.
+
+\section{Usage}
+\noindent
+After building \textsc{hypervolume-t}, you can generate point clouds as follows:
+
+\vspace{1em}
+
+\begin{verbatim}./hvt [options] --input filein.csv --output fileout.csv\end{verbatim}
+
+\vspace{1em}
+
+\vfill
+
+\end{document}
