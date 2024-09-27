@@ -10,6 +10,10 @@
 #include <cmath>
 #include <numeric>
 
+// external libraries
+#include <gudhi/sparsify_point_set.h>
+#include <CGAL/Epick_d.h>
+
 // hvt
 namespace hvt {
     typedef int64_t index;

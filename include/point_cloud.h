@@ -4,6 +4,11 @@
 namespace hvt {
 
 	class point_cloud {
+
+		// Dimension and point types
+		typedef CGAL::Epick_d< CGAL::Dynamic_dimension_tag > K;
+		typedef typename K::Point_d Point_d;	
+
 		private:
 			// The points
 			std::vector< hvt::point > points;
@@ -129,28 +134,12 @@ namespace hvt {
 
 			// (3/3) Declare points by: sparsifying another point cloud 
 			// Adapted from sparsify_point_set in https://gudhi.inria.fr/doc/latest/group__subsampling.html
-			bool sparsify_points( const hvt::point_cloud initial_point_cloud, const hvt::value distance ) {
+			bool sparsify_points( hvt::point_cloud initial_point_cloud, const hvt::value distance ) {
 				// TODO: check that the input point cloud has points initialized
 
-				// Vector that indicates wether or not a point should be dropped 
-				std::vector<bool> dropped_points(initial_point_cloud.points.size(), false);
-
-				// Iterate through points
- 				std::size_t index = 0;
-				for (auto const& point : initial_point_cloud.points) {
-
-					// If point is marked to be dropped, skip
-					if (dropped_points[index++]) {
-						continue;
-					}
-
-					// If point is not marked to be dropped, keep
-					points.push_back(point);
-
-					// 
-
-				}
-
+				// Declare the dimension
+				const hvt::index dim = initial_point_cloud.get_dim();			
+				
 				return true;
 			};
 
