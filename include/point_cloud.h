@@ -6,8 +6,8 @@ namespace hvt {
 	class point_cloud {
 
 		// Dimension and point types
-		typedef CGAL::Epick_d< CGAL::Dynamic_dimension_tag > K;
-		typedef typename K::Point_d Point_d;	
+		typedef CGAL::Epick_d< CGAL::Dynamic_dimension_tag > kernel;
+		typedef typename kernel::Point_d Point_d;	
 
 		private:
 			// The points
@@ -137,9 +137,18 @@ namespace hvt {
 			bool sparsify_points( hvt::point_cloud initial_point_cloud, const hvt::value distance ) {
 				// TODO: check that the input point cloud has points initialized
 
-				// Declare the dimension
-				const hvt::index dim = initial_point_cloud.get_dim();			
-				
+				// Get dimension and number of points
+				const hvt::index dim = initial_point_cloud.get_dim();
+				const hvt::index size = initial_point_cloud.get_size();
+
+				// Create the point cloud as a CGAL kernel
+				std::vector<Point_d> initial_point_cloud_asCGAL;
+  				for (int i = 0; i < size; i++) {
+					hvt::point old_point;
+  					const Point_d new_point = initial_point_cloud.get_point_asCGAL(i, old_point, dim);
+  					initial_point_cloud_asCGAL.push_back(new_point);
+  				}	
+  								
 				return true;
 			};
 
@@ -182,6 +191,12 @@ namespace hvt {
 			// Sets input reference to requested point
 			void get_point( const hvt::index index, hvt::point& my_point ) {
 				my_point = points[index];
+			}
+
+			// Point at a given index, as CGAL point
+			Point_d get_point_asCGAL( const hvt::index index, hvt::point& my_point, hvt::index my_dim ) {
+				my_point = points[index];
+				return Point_d(my_dim, my_point.begin(), my_point.end());
 			}
 
 
