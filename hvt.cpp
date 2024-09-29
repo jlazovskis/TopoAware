@@ -89,7 +89,7 @@ int main (int argc, char** argv) {
 	hvt::point_cloud data_step1;
 	std::vector<int> points_added;
 	bool enrich_successful;
-	enrich_successful = data_step1.split_points( data_step0, points_added );
+	enrich_successful = data_step1.split_points( data_step0, points_added, dist_sparsify );
 	if( !enrich_successful ) {
 		std::cerr << " error" << std::endl;
 		return 0;
