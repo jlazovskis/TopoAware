@@ -12,7 +12,7 @@ Ideas are borrowed from:
 * [gudhi](https://gudhi.inria.fr) : Sparsification methods
 
 ## Usage
-To use this program, you need to have the following programs installed:
+`hypervolume-t` depends on other libraries, which need to be set up before usage:
 * [boost](https://www.boost.org) : C++ Libraries
 * [Eigen](https://eigen.tuxfamily.org) : Template library for linear algebra
 * [CGAL](https://www.cgal.org) : Coputational Geometry Algorithms Library
