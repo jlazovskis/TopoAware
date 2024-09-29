@@ -48,7 +48,7 @@ int main (int argc, char** argv) {
 	bool read_successful;
 	read_successful = data_step0.load_points( filename_in );
 	if ( !read_successful ) { std::cerr << "Error opening file " << filename_in << std::endl; return 0; }
-	else { std::cout << "File loaded with " << data_step0.get_size() << " points" << std::endl;}
+	else { std::cout << "File loaded with " << data_step0.get_size() << " points\n";}
 
 	// Find neighbors
 	data_step0.find_neighbors( dist_barycenter );
@@ -64,7 +64,7 @@ int main (int argc, char** argv) {
 	}
 	else {
 		std::cout << "New point cloud created with " << data_step1.get_size() << " points by adding barycenters ";
-		std::cout << "(" << points_added[0] << " by splitting pairs, " << points_added[1] << " by splitting triples)" << std::endl; 
+		std::cout << "(" << points_added[0] << " by splitting pairs, " << points_added[1] << " by splitting triples)\n"; 
 	}
 
 	// Sparsify
@@ -75,14 +75,15 @@ int main (int argc, char** argv) {
 		std::cerr << "Error sparsifying at minimum distance " << dist_sparsify << std::endl;
 		return 0;
 	}
-
-	// TESTING
-	// data_step0.print_me();
+	else {
+		std::cout << "New point cloud created with " << data_step2.get_size() << " points by sparsifying\n"; 		
+	}
 
 	// Export
-	//bool write_successful;
-	//write_successful = data_step2.export_points( filename_out );
-	//if( !write_successful ) { std::cerr << "Error writing to file " << filename_out << std::endl; return 0; }
-	//else { std::cout << "File exported with " << data_step2.get_size() << " points" << std::endl;}
+	bool write_successful;
+	write_successful = data_step2.export_points( filename_out );
+	if( !write_successful ) { std::cerr << "Error writing to file " << filename_out << std::endl; return 0; }
+	else { std::cout << "File exported with " << data_step2.get_size() << " points" << std::endl;}
+
 	return 1;
 }

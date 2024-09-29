@@ -16,7 +16,8 @@ namespace hvt {
 			// A list of neighbors for each point
 			std::vector< hvt::neighbors > all_neighbors;
 
-			// Distance between pairs of points at given indices (from https://github.com/Ripser)
+			// Distance between pairs of points at given indices
+			// Modified from from https://github.com/Ripser
 			float dist(const hvt::index i, const hvt::index j) const {
 				assert(i < points.size());
 				assert(j < points.size());
@@ -38,7 +39,8 @@ namespace hvt {
 			// Constructor
 			point_cloud() {};
 
-			// (1/3) Declare points by: loading from a file (from https://bitbucket.org/phat-code/phat)
+			// Input / output
+			// Modified from https://bitbucket.org/phat-code/phat
 			bool load_points( const std::string filename ) {
 				// Check to make sure file can be read
 				std::ifstream dummy( filename.c_str() );
@@ -65,7 +67,34 @@ namespace hvt {
 				return true;
 			};
 
-			// (2/3) Declare points by: adding barycenters from another point cloud
+			bool export_points( const std::string filename ) {
+  				
+				// Set up file for writing
+  				std::ofstream outfile;
+  				outfile.open(filename);
+
+  				// Write headers
+  				outfile << "x0";
+				for ( int i = 1; i < get_dim(); i++ ) {
+  					outfile << ",x" << i;
+				}
+				outfile << "\n";
+
+				// Write values
+				for ( const hvt::point& point : points ) { 
+  					outfile << point[0];
+					for ( int i = 1; i < get_dim(); i++ ) {
+	  					outfile << "," << point[i];
+	  				}
+	  				outfile << "\n";
+	  			}
+
+	  			// Close file and exit
+				outfile.close();
+				return true;
+			}
+
+			// Add barycenters from another point cloud
 			bool split_points( hvt::point_cloud initial_point_cloud, std::vector<int>& points_added ) {
 				std::vector<int> new_point_count;
 
@@ -132,10 +161,12 @@ namespace hvt {
 				return true;
 			};
 
-			// (3/3) Declare points by: sparsifying another point cloud 
-			// Adapted from sparsify_point_set in https://gudhi.inria.fr/doc/latest/group__subsampling.html
+			// Sparsify points of another point cloud 
+			// Adapted from https://gudhi.inria.fr/doc/latest/example_sparsify_point_set_8cpp-example.html
 			bool sparsify_points( hvt::point_cloud initial_point_cloud, const hvt::value distance ) {
-				// TODO: check that the input point cloud has points initialized
+
+				// Check that the input point cloud has points initialized
+				assert (initial_point_cloud.get_size() > 0);
 
 				// Get dimension and number of points
 				const hvt::index dim = initial_point_cloud.get_dim();
@@ -148,12 +179,17 @@ namespace hvt {
   					const Point_d new_point = initial_point_cloud.get_point_asCGAL(i, old_point, dim);
   					initial_point_cloud_asCGAL.push_back(new_point);
   				}	
-  								
+
+  				// Sparsify point cloud
+  				kernel new_kernel;
+  				Gudhi::subsampling::sparsify_point_set(new_kernel, initial_point_cloud_asCGAL, distance, std::back_inserter(points));
+
+  				// Success
 				return true;
 			};
 
 			// Compute neighbors at a certain distance (adapted from https://github.com/Ripser)
-			// Only find neihgbors at higher indices, to skip duplicates later
+			// Only find neighbors at higher indices, to skip duplicates later
 			void find_neighbors( const hvt::value threshold ) {
 
 				// Get container for data
@@ -199,67 +235,11 @@ namespace hvt {
 				return Point_d(my_dim, my_point.begin(), my_point.end());
 			}
 
-
 			// Neighbors of a point at a given index
 			// Sets input reference to requested neighbor
 			void get_neighbors( const hvt::index index, hvt::neighbors& neighbors ) {
 				neighbors = all_neighbors[index];
 			}
-
-			// Export to file
-			bool export_points( const std::string filename ) {
-  				
-				// Set up file for writing
-  				std::ofstream outfile;
-  				outfile.open(filename);
-
-  				// Write headers
-  				outfile << "x0";
-				for ( int i = 1; i < get_dim(); i++ ) {
-  					outfile << ",x" << i;
-				}
-				outfile << "\n";
-
-				// Write values
-				for ( const hvt::point& point : points ) { 
-  					outfile << point[0];
-					for ( int i = 1; i < get_dim(); i++ ) {
-	  					outfile << "," << point[i];
-	  				}
-	  				outfile << "\n";
-	  			}
-
-	  			// Close file and exit
-				outfile.close();
-				return true;
-			}
-
-			// TESTING
-			void print_me() {
-
-				// std::cout << dist(10,100);
-
-				// this->points = points;
-				// for ( int col = 0; col < points.size(); col++ ) {
-				// 	for (const hvt::value& value : points[col]) { 
-				// 		std::cout << value << ",";
-				// 	}
-				// std::cout << "\n";
-				// }
-				// std::cout << std::endl;
-			
-				// this->neighbors = neighbors;
-				std::cout << all_neighbors.size() << "\n";
-				// for ( int col = 0; col < neighbors.size(); col++ ) {
-				// 	for (const hvt::index_diameter_t& index_diameter_t : neighbors[col]) { 
-				// 		std::cout << get_index(index_diameter_t) << " at " << get_diameter(index_diameter_t) << ",";
-				// 	}
-				// std::cout << "\n";
-				// }
-				// std::cout << std::endl;				
-
-
-			};
 
 	};
 }
