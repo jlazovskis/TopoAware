@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <cassert>
+#include <chrono>
 #include <cmath>
 #include <numeric>
 
@@ -30,12 +31,13 @@ namespace hvt {
 	// Function that returns the average of points in an input list of points
 	void point_average( hvt::point base, std::vector<hvt::point> neighbor_points, hvt::point& target) {
 
-		// Get dimension 
-		int dim = base.size();
+		// Get number of points and dimension
+		const int num_points = neighbor_points.size()+1;
+		const int dim = base.size();
 		assert (dim > 0);
 
 		// Get number of points
-		int denominator = neighbor_points.size() + 1;
+		const int denominator = neighbor_points.size() + 1;
 		assert (denominator > 1);
 
 		// Place base point values in target point
@@ -52,7 +54,7 @@ namespace hvt {
 
 		// Divide each coordinate by number of points
 		for ( int i = 0; i < dim; i++ ) {
-			target[i] = target[i]/dim;
+			target[i] = target[i]/num_points;
 		}
 	};
 }
