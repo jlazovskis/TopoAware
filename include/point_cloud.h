@@ -137,15 +137,15 @@ namespace hvt {
 						// Iterate once again for triples
 						for ( int k = j+1 ; k < current_neighbors.size() ; k++ ) {
 
-							// Add another neighboring points
+							// Add another neighboring point
 							hvt::point current_point_c;
 							initial_point_cloud.get_point(get_index(current_neighbors[k]),current_point_c);
 							neighboring_points.push_back(current_point_c);
 
 							// Declare, compute, record new point
-							hvt::point new_point;
-							hvt::point_average( current_point, neighboring_points, new_point );
-							points.push_back(new_point);
+							hvt::point new_point2;
+							hvt::point_average( current_point, neighboring_points, new_point2 );
+							points.push_back(new_point2);
 							counter2 += 1;
 
 							// Drop last element
