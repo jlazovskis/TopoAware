@@ -5,10 +5,16 @@ Ecological hypervolumes using topology
 The goal of this project is to use topological tools, in terms of computational efficiency and theoretical guarantees, to construct hypervolumes for use in ecology. Hypervolumes are usually constructed as kernel density estimators, but those are often less interesting topologically at the expense of knowing more information (precisley "filling in" the holes of missing data). This project aims to retain toological information of the input sample while still providing the user with more information about the space in which the sample lies. Ideas are borrowed from:
 * [hypervolume](https://github.com/bblonder/hypervolume): The orginal program to generate hypervolumes via kernel density estimators
 * [ripser](https://github.com/Ripser): Efficient constructions of simplicial complexes
-* [gudhi](https://gudhi.inria.fr) : sparsification methods
+* [gudhi](https://gudhi.inria.fr) : Sparsification methods
 
 ## Usage
- First compile the program, using your favorite compiler. Example below with `g++`.
+To use this program, you need to have the following programs installed:
+* [gudhi](https://gudhi.inria.fr) : Sparsification methods
+* [CGAL](https://www.cgal.org/ : Coputational Geometry Algorithms Library
+* [Eigen](https://eigen.tuxfamily.org) : Template library for linear algebra
+* [boost](https://www.boost.org/) : C++ Libraries
+
+Once these libraries are present on you machine, compile `hvt` using your favorite compiler. Example below with `g++`.
 
     g++ -o hvt -I include hvt.cpp
 
