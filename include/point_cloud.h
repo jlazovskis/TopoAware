@@ -123,7 +123,7 @@ namespace hvt {
 					// Iterate through neighbors
 					for ( int j = 0; j < current_neighbors.size() ; j++ ) {
 						const hvt::index index_j = get_index(current_neighbors[j]);
-						const float dist_ij = initial_point_cloud.dist(i,index_j);
+						// const float dist_ij = initial_point_cloud.dist(i,index_j);
 
 						// Add midpoint of every two points
 						std::vector< hvt::point > neighboring_points;
@@ -142,10 +142,10 @@ namespace hvt {
 							const hvt::index index_k = get_index(current_neighbors[k]);
 							const float dist_jk = initial_point_cloud.dist(index_j,index_k);
 
-							// Check if third point is not too close to existing points
-							if (dist_ij > dist_jk/3) {
-								if (initial_point_cloud.dist(i,index_k) > dist_ij/3) {
-									if (initial_point_cloud.dist(index_j,index_k) > dist_ij/3) {
+							// // Check if third point is not too close to existing points
+							// if (dist_ij > dist_jk/3) {
+							//	if (initial_point_cloud.dist(i,index_k) > dist_ij/3) {
+							//		if (initial_point_cloud.dist(index_j,index_k) > dist_ij/3) {
 
 										// Add another neighboring point
 										hvt::point current_point_c;
@@ -160,9 +160,9 @@ namespace hvt {
 			
 										// Drop last element two have two starting points for next triple
 										neighboring_points.pop_back();
-									}
-								}
-							}
+							//		}
+							//	}
+							//}
 						}
 					}
 				}
