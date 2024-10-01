@@ -2,8 +2,8 @@
 // Created by Jānis Lazovskis 
 // GPL-3 license 
 
-#include <misc.h>
-#include <point_cloud.h>
+#include <include/misc.h>
+#include <include/point_cloud.h>
 
 // Main runtime
 int main (int argc, char** argv) {

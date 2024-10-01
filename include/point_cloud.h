@@ -226,6 +226,11 @@ namespace hvt {
 				}
 			};
 
+			// Add a point to the end of the list of points
+			void add_point( hvt::point new_point ) {
+				points.push_back(new_point);
+			}
+
 			// Dimension of points in point cloud
 			hvt::index get_dim() {
 				return points[0].size();

@@ -12,7 +12,16 @@ Ideas are borrowed from:
 * [gudhi](https://gudhi.inria.fr) : Sparsification methods
 
 ## Usage
-`hypervolume-t` depends on other libraries, which need to be set up before usage:
+
+`hypervolume-t` can be used directly with the provided releases, or can be compiled from the source code.
+
+### Relases
+
+TODO
+
+### Compiling
+
+`hypervolume-t` depends on other libraries, which need to be set up before compiling:
 * [boost](https://www.boost.org) : C++ Libraries
 * [Eigen](https://eigen.tuxfamily.org) : Template library for linear algebra
 * [CGAL](https://www.cgal.org) : Coputational Geometry Algorithms Library
@@ -20,7 +29,7 @@ Ideas are borrowed from:
 
 Once these libraries are present on you machine, compile `hvt`, for example with `g++`.
 
-    g++ -o hvt -I include hvt.cpp
+    g++ -o hvt hvt.cpp
 
 Then run the program on a data set, indicating the distance `bdist` at which to add barycenters for 1-simplices and 2-simplices, and the distance `sdist` at which to sparsify by maintaining this minimum distance between any two points. Example with provided data below.
 
