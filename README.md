@@ -21,13 +21,17 @@ TODO
 
 ### Compiling
 
-`hypervolume-t` depends on other libraries, which need to be set up before compiling:
+`hypervolume-t` depends on other C++ libraries, which need to be set up before compiling:
 * [boost](https://www.boost.org) : C++ Libraries
 * [Eigen](https://eigen.tuxfamily.org) : Template library for linear algebra
 * [CGAL](https://www.cgal.org) : Coputational Geometry Algorithms Library
 * [gudhi](https://gudhi.inria.fr) : Sparsification methods
 
-Once these libraries are present on you machine, compile `hvt`, for example with `g++`.
+Oly once these libraries are present on you machine will it be possible to compile `hypervolume-t`, both for C++ and R.
+
+#### Compiling in C++
+
+Compile `hvt`, for example with `g++`.
 
     g++ -o hvt -I include hvt.cpp
 
@@ -36,3 +40,16 @@ Then run the program on a data set, indicating the distance `bdist` at which to 
     ./hvt --input examples/test_shape.csv --output examples/test_out.csv --bdist 0.5 --sdist 0.05
 
 In general, `sdist < bdist`, as having the sparsification distance larger than the barycentric subdivision distance voids the need for barycentric subdivision. That is, just sparsifying the input data set would yield the same result as first subdividing, then sparsifying.
+
+#### Compiling in R
+
+The `Rcpp` library is necessary to compile from source code in R. 
+
+    > library('Rcpp')
+    > sourceCpp('hvt-r.cpp')
+    > hypervolume_t(data=df, dist_barycenter=0.5, dist_sparsify=0.05)
+
+# TODO
+
+* Import df from examples into R
+* Move examples to new subsection, align variable names
