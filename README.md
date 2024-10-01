@@ -29,7 +29,7 @@ TODO
 
 Once these libraries are present on you machine, compile `hvt`, for example with `g++`.
 
-    g++ -o hvt hvt.cpp
+    g++ -o hvt -I include hvt.cpp
 
 Then run the program on a data set, indicating the distance `bdist` at which to add barycenters for 1-simplices and 2-simplices, and the distance `sdist` at which to sparsify by maintaining this minimum distance between any two points. Example with provided data below.
 

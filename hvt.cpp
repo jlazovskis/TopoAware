@@ -2,8 +2,8 @@
 // Created by Jānis Lazovskis 
 // GPL-3 license 
 
-#include <include/misc.h>
-#include <include/point_cloud.h>
+#include <misc.h>
+#include <point_cloud.h>
 
 // Main runtime
 int main (int argc, char** argv) {
@@ -88,50 +88,26 @@ int main (int argc, char** argv) {
 	std::cout << "Adding barycenters to all pairs and triples within " << dist_barycenter << "... " << std::flush; 
 	hvt::point_cloud data_step1;
 	std::vector<int> points_added;
-	bool enrich_successful;
-	enrich_successful = data_step1.split_points( data_step0, points_added, dist_sparsify );
-	if( !enrich_successful ) {
-		std::cerr << " error" << std::endl;
-		return 0;
-	}
-	else {
-		std::cout << " done (" << data_step1.get_size() << " points = " << points_added[0] << " from pairs, " << points_added[1] << " from triples)\n"; 
-	}
+	data_step1.split_points( data_step0, points_added, dist_sparsify );
+	std::cout << " done (" << data_step1.get_size() << " points = " << points_added[0] << " from pairs, " << points_added[1] << " from triples)\n";
 
 	// Export barycenters
 	if ( filename_bcs != NULL ) {
-		bool bcs_successful;
 		std::cout << "Exporting barycentric subdivision to file... " << std::flush; 
-		bcs_successful = data_step1.export_points( filename_bcs );
-		if( !bcs_successful ) {
-			std::cerr << "error" << std::endl;
-			return 0;
-		}
-		else { std::cout << "done" << std::endl;}
+		data_step1.export_points( filename_bcs );
+		std::cout << "done" << std::endl;
 	}
 
 	// Sparsify
 	std::cout << "Sparsifying with minimum distance " << dist_sparsify << "... " << std::flush; 
 	hvt::point_cloud data_step2;
-	bool sparsify_successful;
-	sparsify_successful = data_step2.sparsify_points( data_step1, dist_sparsify );
-	if( !sparsify_successful ) {
-		std::cerr << " error" << std::endl;
-		return 0;
-	}
-	else {
-		std::cout << " done (" << data_step2.get_size() << " points)\n"; 		
-	}
+	data_step2.sparsify_points( data_step1, dist_sparsify );
+	std::cout << " done (" << data_step2.get_size() << " points)\n"; 		
 
 	// Export
 	std::cout << "Exporting sparsified point cloud to file... " << std::flush; 
-	bool write_successful;
-	write_successful = data_step2.export_points( filename_out );
-	if( !write_successful ) {
-		std::cerr << "error" << std::endl;
-		return 0;
-	}
-	else { std::cout << "done" << std::endl;}
+	data_step2.export_points( filename_out );
+	std::cout << "done" << std::endl;
 
 	// Exit
 	auto stop = std::chrono::high_resolution_clock::now();

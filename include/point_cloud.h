@@ -67,7 +67,7 @@ namespace hvt {
 				return true;
 			};
 
-			bool export_points( const std::string filename ) {
+			void export_points( const std::string filename ) {
   				
 				// Set up file for writing
   				std::ofstream outfile;
@@ -91,11 +91,10 @@ namespace hvt {
 
 	  			// Close file and exit
 				outfile.close();
-				return true;
 			}
 
 			// Add barycenters from another point cloud
-			bool split_points( hvt::point_cloud initial_point_cloud, std::vector<int>& points_added,  const hvt::value sparsification_dist ) {
+			void split_points( hvt::point_cloud initial_point_cloud, std::vector<int>& points_added,  const hvt::value sparsification_dist ) {
 				std::vector<int> new_point_count;
 
 				// Check that the input point cloud has points initialized
@@ -171,12 +170,11 @@ namespace hvt {
 				new_point_count.push_back(counter1);
 				new_point_count.push_back(counter2);
 				points_added = new_point_count;
-				return true;
 			};
 
 			// Sparsify points of another point cloud 
 			// Adapted from https://gudhi.inria.fr/doc/latest/example_sparsify_point_set_8cpp-example.html
-			bool sparsify_points( hvt::point_cloud initial_point_cloud, const hvt::value distance ) {
+			void sparsify_points( hvt::point_cloud initial_point_cloud, const hvt::value distance ) {
 
 				// Check that the input point cloud has points initialized
 				assert (initial_point_cloud.get_size() > 0);
@@ -196,9 +194,7 @@ namespace hvt {
   				// Sparsify point cloud
   				kernel new_kernel;
   				Gudhi::subsampling::sparsify_point_set(new_kernel, initial_point_cloud_asCGAL, distance, std::back_inserter(points));
-
-  				// Success
-				return true;
+  				
 			};
 
 			// Compute neighbors at a certain distance (adapted from https://github.com/Ripser)
