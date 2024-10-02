@@ -47,9 +47,9 @@ The `Rcpp` library is necessary to compile from source code in R.
 
     > library('Rcpp')
     > sourceCpp('hvt-r.cpp')
-    > hypervolume_t(data=df, dist_barycenter=0.5, dist_sparsify=0.05)
+    > df <- read.csv('examples/2d_input.csv')
+    > df2 <- hypervolume_t(data=df, dist_barycenter=0.6, dist_sparsify=0.01)
 
 # TODO
 
-* Import df from examples into R
 * Move examples to new subsection, align variable names

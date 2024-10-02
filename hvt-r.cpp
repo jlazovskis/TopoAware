@@ -46,6 +46,13 @@ Rcpp::DataFrame hypervolume_t(
 	data_step1.split_points( data_step0, points_added, dist_sparsify );
 	std::cout << " done (" << data_step1.get_size() << " points = " << points_added[0] << " from pairs, " << points_added[1] << " from triples)\n";
 
+	// Sparsify
+	std::cout << "Sparsifying with minimum distance " << dist_sparsify << "... " << std::flush; 
+	hvt::point_cloud data_step2;
+	data_step2.sparsify_points( data_step1, dist_sparsify );
+	std::cout << " done (" << data_step2.get_size() << " points)\n"; 		
+
+
 	//R// Convert output from C++ to R
 	//R// Step 1: Create container to hold columns
 	std::vector< Rcpp::NumericVector > data_out_container;
@@ -54,11 +61,11 @@ Rcpp::DataFrame hypervolume_t(
    		data_out_container.push_back(column);
    	}
 
-   	//R// Step 2: Go through all point and add values to columns
-    const int samples_out = data_step1.get_size();
+   	//R// Step 2: Go through all points and add values to columns
+    const int samples_out = data_step2.get_size();
 	for ( int i = 0; i < samples_out; i++ ) {
 		hvt::point current_point;
-		data_step1.get_point(i,current_point);
+		data_step2.get_point(i,current_point);
    		for ( int j = 0; j < dim; j++ ) {
    			data_out_container[j].push_back(current_point[j]);
    		}
@@ -69,6 +76,11 @@ Rcpp::DataFrame hypervolume_t(
    	for ( int j = 0; j < dim; j++ ) {
    		data_out.push_back(data_out_container[j], "x"+std::to_string(j));
    	}
+
+	// Exit
+	auto stop = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast< std::chrono::seconds >(stop - start);
+	std::cout << "--------------------\nFinished in " << duration.count() << " seconds" << std::endl;
 
    	//R// Return final dataframe
 	return data_out;
