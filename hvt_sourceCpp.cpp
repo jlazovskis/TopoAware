@@ -4,6 +4,8 @@
 
 #include <include/misc.h>
 #include <include/point_cloud.h>
+#include <include/split_points.h>
+#include <include/sparsify_points.h>
 
 #include <Rcpp.h>
 // [[Rcpp::export]]
@@ -43,13 +45,13 @@ Rcpp::DataFrame hypervolume_t(
 	std::cout << "Adding barycenters to all pairs and triples within " << dist_barycenter << "... " << std::flush; 
 	hvt::point_cloud data_step1;
 	std::vector<int> points_added;
-	data_step1.split_points( data_step0, points_added, dist_sparsify );
+	hvt::split_points( data_step0, data_step1, points_added, dist_barycenter );
 	std::cout << " done (" << data_step1.get_size() << " points = " << points_added[0] << " from pairs, " << points_added[1] << " from triples)\n";
 
 	// Sparsify
 	std::cout << "Sparsifying with minimum distance " << dist_sparsify << "... " << std::flush; 
 	hvt::point_cloud data_step2;
-	data_step2.sparsify_points( data_step1, dist_sparsify );
+	hvt::sparsify_points( data_step1, data_step2, dist_sparsify );
 	std::cout << " done (" << data_step2.get_size() << " points)\n"; 		
 
 

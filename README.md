@@ -1,5 +1,5 @@
 # hypervolume-t
-Ecological hypervolumes using topology
+Topologically aware inference as an alternative to kernel density estimation
 
 ## About
 The goal of this project is to use topological tools, in terms of computational efficiency and theoretical guarantees, to construct hypervolumes for use in ecology. Hypervolumes are usually constructed as kernel density estimators, but those are often less interesting topologically at the expense of knowing more information (precisley "filling in" the holes of missing data). This project aims to retain toological information of the input sample while still providing the user with more information about the space in which the sample lies.
@@ -46,7 +46,7 @@ In general, `sdist < bdist`, as having the sparsification distance larger than t
 The `Rcpp` library is necessary to compile from source code in R. 
 
     > library('Rcpp')
-    > sourceCpp('hvt-r.cpp')
+    > sourceCpp('hvt_sourceCpp.cpp')
     > df <- read.csv('examples/2d_input.csv')
     > df2 <- hypervolume_t(data=df, dist_barycenter=0.6, dist_sparsify=0.01)
 
