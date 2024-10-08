@@ -1,9 +1,8 @@
 // This file is part of hypervolume-t 
-// Header file for brycentric subdivision of a point cloud
+// Header file for barycentric subdivision of a point cloud
 
 namespace hvt {
 
-	// Add barycenters from another point cloud
 	void split_points(
 			hvt::point_cloud initial_point_cloud,
 			hvt::point_cloud& target_point_cloud,

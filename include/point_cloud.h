@@ -3,11 +3,11 @@
 
 namespace hvt {
 
-	class point_cloud {
+	// Dimension and point types
+	typedef CGAL::Epick_d< CGAL::Dynamic_dimension_tag > kernel;
+	typedef typename kernel::Point_d Point_d;	
 
-		// Dimension and point types
-		typedef CGAL::Epick_d< CGAL::Dynamic_dimension_tag > kernel;
-		typedef typename kernel::Point_d Point_d;	
+	class point_cloud {
 
 		private:
 			// The points
@@ -93,31 +93,6 @@ namespace hvt {
 				outfile.close();
 			}
 
-			// Sparsify points of another point cloud 
-			// Adapted from https://gudhi.inria.fr/doc/latest/example_sparsify_point_set_8cpp-example.html
-			void sparsify_points( hvt::point_cloud initial_point_cloud, const hvt::value distance ) {
-
-				// Check that the input point cloud has points initialized
-				assert (initial_point_cloud.get_size() > 0);
-
-				// Get dimension and number of points
-				const hvt::index dim = initial_point_cloud.get_dim();
-				const hvt::index size = initial_point_cloud.get_size();
-
-				// Create the point cloud as a CGAL kernel
-				std::vector<Point_d> initial_point_cloud_asCGAL;
-  				for (int i = 0; i < size; i++) {
-					hvt::point old_point;
-  					const Point_d new_point = initial_point_cloud.get_point_asCGAL(i, old_point, dim);
-  					initial_point_cloud_asCGAL.push_back(new_point);
-  				}	
-
-  				// Sparsify point cloud
-  				kernel new_kernel;
-  				Gudhi::subsampling::sparsify_point_set(new_kernel, initial_point_cloud_asCGAL, distance, std::back_inserter(points));
-  				
-			};
-
 			// Compute neighbors at a certain distance (adapted from https://github.com/Ripser)
 			// Only find neighbors at higher indices, to skip duplicates later
 			void find_neighbors( const hvt::value threshold ) {
@@ -146,6 +121,11 @@ namespace hvt {
 			// Add a point to the end of the list of points
 			void add_point( hvt::point new_point ) {
 				points.push_back(new_point);
+			}
+
+			// Set all points at once
+			void add_points( std::vector< hvt::point >& new_points ) {
+				points = new_points;
 			}
 
 			// Dimension of points in point cloud

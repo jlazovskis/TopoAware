@@ -5,6 +5,7 @@
 #include <misc.h>
 #include <point_cloud.h>
 #include <split_points.h>
+#include <sparsify_points.h>
 
 // Main runtime
 int main (int argc, char** argv) {
@@ -102,7 +103,7 @@ int main (int argc, char** argv) {
 	// Sparsify
 	std::cout << "Sparsifying with minimum distance " << dist_sparsify << "... " << std::flush; 
 	hvt::point_cloud data_step2;
-	data_step2.sparsify_points( data_step1, dist_sparsify );
+	hvt::sparsify_points( data_step1, data_step2, dist_sparsify );
 	std::cout << " done (" << data_step2.get_size() << " points)\n"; 		
 
 	// Export
