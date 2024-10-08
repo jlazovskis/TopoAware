@@ -19,17 +19,39 @@ Ideas are borrowed from:
 
 TODO
 
-### Compiling
+### Compiling and dependencies
 
-`hypervolume-t` depends on other C++ libraries, which need to be set up before compiling:
+`hypervolume-t` depends on other C++ libraries:
 * [boost](https://www.boost.org) : C++ Libraries
 * [Eigen](https://eigen.tuxfamily.org) : Template library for linear algebra
 * [CGAL](https://www.cgal.org) : Coputational Geometry Algorithms Library
-* [gudhi](https://gudhi.inria.fr) : Sparsification methods
+* [GUDHI](https://gudhi.inria.fr) : Sparsification methods
 
-Oly once these libraries are present on you machine will it be possible to compile `hypervolume-t`, both for C++ and R.
+All of these libraries are necessary only for the `sparsify_points` function, and they are dependent in the following way, at a shallow level:
+
+````
+sparsify_points.h
+│
+├── GUDHI
+│   ├── sparsify_point_set.h
+│   └── Kd_tree_search.h
+├── CGAL
+│   ├── Epick_d.h
+│   └── Dimension.h
+├── Eigen
+│   ├── Constants.h
+│   └── Macros.h
+└── boost
+    ├── function_output_iterator.hpp
+    └── counting_iterator.hpp
+
+````
+
+The full libraries are included in the release.
 
 #### Compiling in C++
+
+The mentioned libraries need to be present on you machine to compile `hypervolume-t`.
 
 Compile `hvt`, for example with `g++`.
 
@@ -43,12 +65,14 @@ In general, `sdist < bdist`, as having the sparsification distance larger than t
 
 #### Compiling in R
 
-The `Rcpp` library is necessary to compile from source code in R. 
+If you already have the mentioned libraries on your machine, you can use the `sourceCpp` command from the `Rcpp` library to immediately start using the code. 
 
     > library('Rcpp')
     > sourceCpp('hvt_sourceCpp.cpp')
     > df <- read.csv('examples/2d_input.csv')
     > df2 <- hypervolume_t(data=df, dist_barycenter=0.6, dist_sparsify=0.01)
+
+If you are missing some of the libraries, the necessary files are povided in an `R` package.
 
 # TODO
 
