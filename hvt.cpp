@@ -4,6 +4,7 @@
 
 #include <misc.h>
 #include <point_cloud.h>
+#include <split_points.h>
 
 // Main runtime
 int main (int argc, char** argv) {
@@ -88,7 +89,7 @@ int main (int argc, char** argv) {
 	std::cout << "Adding barycenters to all pairs and triples within " << dist_barycenter << "... " << std::flush; 
 	hvt::point_cloud data_step1;
 	std::vector<int> points_added;
-	data_step1.split_points( data_step0, points_added, dist_sparsify );
+	hvt::split_points( data_step0, data_step1, points_added, dist_barycenter );
 	std::cout << " done (" << data_step1.get_size() << " points = " << points_added[0] << " from pairs, " << points_added[1] << " from triples)\n";
 
 	// Export barycenters
