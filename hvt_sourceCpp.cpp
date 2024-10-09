@@ -2,10 +2,10 @@
 // Created by Jānis Lazovskis 
 // GPL-3 license 
 
-#include <include/misc.h>
-#include <include/point_cloud.h>
-#include <include/split_points.h>
-#include <include/sparsify_points.h>
+#include <misc.h>
+#include <point_cloud.h>
+#include <split_points.h>
+#include <sparsify_points.h>
 
 #include <Rcpp.h>
 // [[Rcpp::export]]
