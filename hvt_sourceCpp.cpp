@@ -13,8 +13,8 @@
 // Main runtime
 Rcpp::DataFrame hypervolume_t(
 		Rcpp::DataFrame data,       // The input data frame
-		hvt::value dist_barycenter, // Distance below which all pairs and triples will be subdivided
-		hvt::value dist_sparsify)   // Minimum distance between all sparsified points
+		float dist_barycenter,      // Distance below which all pairs and triples will be subdivided
+		float dist_sparsify)        // Minimum distance between all sparsified points
 	{
 
 	// TODO: Check arguments
