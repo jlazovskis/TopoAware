@@ -1,0 +1,3 @@
+useDynLib(hvt, .registration=TRUE)
+importFrom(Rcpp, evalCpp)
+export("hypervolume_t")
