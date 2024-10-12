@@ -1,4 +1,4 @@
-// hypervolume-t (port to R)
+// hypervolume-t 0.1.0 (port to R)
 // Created by Jānis Lazovskis 
 // GPL-3 license 
 
@@ -18,7 +18,7 @@ Rcpp::DataFrame hypervolume_t(
 	{
 
 	// TODO: Check arguments
-	std::cout << "hypervolume-t v0.1\n--------------------\n";
+	std::cout << "hypervolume-t 0.1.0\n--------------------\n";
 
 	// Start timer
 	auto start = std::chrono::high_resolution_clock::now();
