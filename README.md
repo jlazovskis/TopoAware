@@ -13,41 +13,25 @@ Ideas are borrowed from:
 
 ## Usage
 
-`hypervolume-t` can be used directly with the provided releases, or can be compiled from the source code.
+`hypervolume-t` can be used directly with the provided releases, or can be compiled from the source code. For most users using the releases is suggested.
 
-### Relases
+### Releases and installation
 
-TODO
+The current release is `0.1.0`. A compiled executable `hvt` from the C++ source is provided, which can be used immediately from the command line. An `R` package `hvt` is also provided, which can be installed by launching `R` in the same folder as the downloaded `.tar.gz` file, and calling:
+
+    > install.packages("hvt_0.1.0.tar.gz", repos = NULL, type = "source", dependencies = TRUE)
+
+The dependencies are BH, Rcpp, RcppEigen, RcppCGAL. Common issues of this command failing could be related to having an older version of `R` or needing to update the packages. Please submit an issue if this approach does not work for you. A proper release on CRAN is planned. 
 
 ### Compiling and dependencies
 
 `hypervolume-t` depends on other C++ libraries:
 * [boost](https://www.boost.org) : C++ Libraries
 * [Eigen](https://eigen.tuxfamily.org) : Template library for linear algebra
-* [CGAL](https://www.cgal.org) : Coputational Geometry Algorithms Library
+* [CGAL](https://www.cgal.org) : Computational Geometry Algorithms Library
 * [GUDHI](https://gudhi.inria.fr) : Sparsification methods
 
-All of these libraries are necessary only for the `sparsify_points` function, and they are dependent in the following way, at a shallow level:
-
-````
-sparsify_points.h
-│
-├── GUDHI
-│   ├── sparsify_point_set.h
-│   └── Kd_tree_search.h
-├── CGAL
-│   ├── Epick_d.h
-│   └── Dimension.h
-├── Eigen
-│   ├── Constants.h
-│   └── Macros.h
-└── boost
-    ├── function_output_iterator.hpp
-    └── counting_iterator.hpp
-
-````
-
-The full libraries are included in the release.
+All of these libraries are necessary only for the `sparsify_points` function.
 
 #### Compiling in C++
 
@@ -65,15 +49,16 @@ In general, `sdist < bdist`, as having the sparsification distance larger than t
 
 #### Compiling in R
 
-If you already have the mentioned libraries on your machine, you can use the `sourceCpp` command from the `Rcpp` library to immediately start using the code. 
+The `C++` code has been ported to `R` using the `Rcpp` package. Dependencies on the other libraries are sorted either by including the header files (in the case of GUDHI), or by requiring the respective ported packages as dependences (boost as [BH](https://cran.r-project.org/web/packages/BH), Eigen as [RcppEigen](https://cran.r-project.org/web/packages/RcppEigen), and CGAL as [RcppCGAL](https://cran.r-project.org/web/packages/BH)).  3.8.0 included  If you already have the mentioned libraries on your machine, you can use the `sourceCpp` command from the `Rcpp` library to immediately start using the code. 
 
     > library('Rcpp')
     > sourceCpp('hvt_sourceCpp.cpp')
     > df <- read.csv('examples/2d_input.csv')
     > df2 <- hypervolume_t(data=df, dist_barycenter=0.6, dist_sparsify=0.01)
 
-If you are missing some of the libraries, the necessary files are povided in an `R` package.
-
 # TODO
 
+* Documentation
+* Replace cout in R port with appropriate method
 * Move examples to new subsection, align variable names
+* Test cases
