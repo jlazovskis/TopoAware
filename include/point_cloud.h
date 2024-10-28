@@ -42,6 +42,8 @@ namespace hvt {
 			// Input / output
 			// Modified from https://bitbucket.org/phat-code/phat
 			bool load_points( const std::string filename ) {
+				std::setprecision(12) ;
+
 				// Check to make sure file can be read
 				std::ifstream dummy( filename.c_str() );
 				if( dummy.fail() ) {
@@ -142,6 +144,20 @@ namespace hvt {
 			// Sets input reference to requested point
 			void get_point( const hvt::index index, hvt::point& my_point ) {
 				my_point = points[index];
+			}
+
+			// Coordinate of all points at a given dimension
+			// Sets input reference to requested slice
+			void get_slice( const int dim_index, hvt::point& my_point ) {
+
+				// Check that the requested dimension index is admissible
+				assert ( dim_index >= 0 );
+				assert ( dim_index < points[0].size() );
+
+				for ( hvt::point p : points ) { 
+					const hvt::value coord = p[dim_index];
+					my_point.push_back( coord );
+				}
 			}
 
 			// Point at a given index, as CGAL point
