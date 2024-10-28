@@ -155,8 +155,7 @@ namespace hvt {
 				assert ( dim_index < points[0].size() );
 
 				for ( hvt::point p : points ) { 
-					const hvt::value coord = p[dim_index];
-					my_point.push_back( coord );
+					my_point.push_back( p[dim_index] );
 				}
 			}
 
