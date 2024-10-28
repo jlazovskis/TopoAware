@@ -120,6 +120,36 @@ namespace hvt {
 				}
 			};
 
+			// Split an input point point cloud in two parts, based on the order of a given coordinate
+			void split_at_coordinate( const int dim_index, hvt::point_cloud& first, hvt::point_cloud& second ) {
+
+				// Get slice
+       			hvt::point target;
+       			get_slice(dim_index, target);
+
+  				// Adapted from https://stackoverflow.com/a/12399290
+       			const int target_size = points.size();
+  				std::vector<size_t> idx(target_size);
+  				iota(idx.begin(), idx.end(), 0);
+  				std::stable_sort(
+  					idx.begin(),
+  					idx.end(),
+       				[&target](size_t i1, size_t i2) {return target[i1] < target[i2];}
+       			);
+
+       			// Add to new point clouds
+       			int i = 0;
+       			while (i < target_size/2) {
+       				first.add_point(points[i]);
+       				i++;
+       			}
+       			while (i < target_size) {
+       				second.add_point(points[i]);
+       				i++;
+       			}
+
+			}
+
 			// Add a point to the end of the list of points
 			void add_point( hvt::point new_point ) {
 				points.push_back(new_point);
