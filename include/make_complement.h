@@ -35,19 +35,37 @@ namespace hvt {
 		}
 
 		// Create binary array for whether or not points should exist
-		std::vector< std::vector< bool >(dim, false) >(total_points);
+		std::vector< std::vector< bool >(dim, false) >(total_points) point_tracker;
 
 		// Iterate through points in initial point cloud and drop them
 		for ( int i=0; i<size; i ++ ) {
 			hvt::point current_point;
 			initial_point_cloud.get_point(i, current_point);
-			std::vector< int > current_location;
+			std::vector< int > current_coordinate;
 			for ( int d=0; d<=dim; d++ ) {
 				const auto dv = std::div(abs(current_point[d] - ranges[d].first), step_size);
-				current_location.push_back(dv.quot);
+				current_coordinate.push_back(dv.quot);
 			}
-						
+			int current_location = 1;
+			for ( int d=0; d<=dim; d++ ) {
+				int current_summand = current_coordinate[d];
+				for ( int dd=0; dd<d; dd++ ) {
+					current_summand = current_summand*steps_bydim[dd];
+				}
+				current_location += current_summand;
+			}
+			point_tracker[current_location] = (true || point_tracker[current_location]);
+		}
 
+		// Initialize the points in the positions that have not been dropped
+		target_point_cloud.add_point();
+		for ( int i=0; i<total_points; i++ ) {
+			if ( point_tracker[i] ) {
+				hvt::point current_point;
+				
+				
+
+			}
 		}
 
 	};
