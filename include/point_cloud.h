@@ -69,18 +69,20 @@ namespace hvt {
 				return true;
 			};
 
-			void export_points( const std::string filename ) {
+			void export_points( const std::string filename, bool header ) {
   				
 				// Set up file for writing
   				std::ofstream outfile;
   				outfile.open(filename);
 
-  				// Write headers
-  				outfile << "x0";
-				for ( int i = 1; i < get_dim(); i++ ) {
-  					outfile << ",x" << i;
+  				// Write header
+  				if ( header ) {
+	  				outfile << "x0";
+					for ( int i = 1; i < get_dim(); i++ ) {
+  						outfile << ",x" << i;
+					}
+					outfile << "\n";
 				}
-				outfile << "\n";
 
 				// Write values
 				for ( const hvt::point& point : points ) { 

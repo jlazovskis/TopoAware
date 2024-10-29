@@ -73,15 +73,15 @@ int main (int argc, char** argv) {
 		std::cerr << "Missing output file" << std::endl;
 		return 0;
 	}
-	if ( dist_aggregate <= 0 ) {
+	if ( dist_aggregate < 0 ) {
 		std::cerr << "Distance for aggregating either unset or nonpositive" << std::endl;
 		return 0;
 	}
-	if ( dist_barycenter <= 0 ) {
+	if ( dist_barycenter < 0 ) {
 		std::cerr << "Distance for barycentric subdivison either unset or nonpositive" << std::endl;
 		return 0;
 	}
-	if ( dist_sparsify <= 0 ) {
+	if ( dist_sparsify < 0 ) {
 		std::cerr << "Distance for sparsification either unset or nonpositive" << std::endl;
 		return 0;
 	}
@@ -105,68 +105,64 @@ int main (int argc, char** argv) {
 	else { std::cout << "done (" << data_step0.get_size() << " points)\n";}
 
 	// Split into parts for aggregation
-	current = std::chrono::high_resolution_clock::now();
-	duration = std::chrono::duration_cast< std::chrono::seconds >(current - start);
-	std::cout << "(time: " << duration.count() << " seconds) Splitting dataset " << kdtree_splits << " times...\n";
-
-	// Initialize
-	std::vector< hvt::point_cloud > kdtree_container;
-	kdtree_container.push_back(data_step0);
-
-	// Iterate requested number of times
-    for ( int step = 0; step<kdtree_splits; step++ ) {
-		int step_dim = step % data_step0.get_dim();
-		std::vector< hvt::point_cloud > current_kdtree_container;
-
-		for ( hvt::point_cloud& subset : kdtree_container ) {
-			hvt::point_cloud partA;
-			hvt::point_cloud partB;
-			subset.split_at_coordinate( step_dim, partA, partB );
-			current_kdtree_container.push_back(partA);
-			current_kdtree_container.push_back(partB);
-		}
-
-		// Add to container for next cycle
-		kdtree_container.clear();
-		for ( hvt::point_cloud pc : current_kdtree_container ) { kdtree_container.push_back(pc); }
-	}
-
-	// TESTING
-	// for ( hvt::point_cloud pc : kdtree_container ) {std::cout << pc.get_size() << " ";}
-	// std::cout << std::endl;
-
-	// Aggregate
-	current = std::chrono::high_resolution_clock::now();
-	duration = std::chrono::duration_cast< std::chrono::seconds >(current - start);
-	std::cout << "(time: " << duration.count() << " seconds) Aggregating in parts with minimum distance " << dist_aggregate << "... " << std::endl; 
-	std::vector< hvt::point_cloud > data_step1_container;
-
-	#pragma omp parallel for 
-	for ( hvt::point_cloud& pc : kdtree_container ) { 
-		hvt::point_cloud pc_sparsified;
-		hvt::sparsify_points( pc, pc_sparsified, dist_aggregate );
-		data_step1_container.push_back(pc_sparsified);
-	}
-
-	// TESTING
-	// for ( hvt::point_cloud pc : data_step1_container ) {std::cout << pc.get_size() << " ";}
-	// std::cout << std::endl;
-
-	// Recombine
-	hvt::point_cloud data_step1_preaggregated;
-	for ( hvt::point_cloud& pc : data_step1_container ) {
-		std::vector< hvt::point > p;
-		pc.get_points(p);
-		data_step1_preaggregated.add_points(p);
-	}
-
-	// Aggregate again
-	current = std::chrono::high_resolution_clock::now();
-	duration = std::chrono::duration_cast< std::chrono::seconds >(current - start);
-	std::cout << "(time: " << duration.count() << " seconds) Aggregating all together: from " << data_step1_preaggregated.get_size() << " points"; 
 	hvt::point_cloud data_step1;
-	hvt::sparsify_points( data_step1_preaggregated, data_step1, dist_aggregate );
-	std::cout << " to " << data_step1.get_size() << " points" << std::endl; 
+	if ( dist_aggregate > 0 ) {
+
+		current = std::chrono::high_resolution_clock::now();
+		duration = std::chrono::duration_cast< std::chrono::seconds >(current - start);
+		std::cout << "(time: " << duration.count() << " seconds) Splitting dataset " << kdtree_splits << " times...\n";
+	
+		// Initialize
+		std::vector< hvt::point_cloud > kdtree_container;
+		kdtree_container.push_back(data_step0);
+	
+		// Iterate requested number of times
+    	for ( int step = 0; step<kdtree_splits; step++ ) {
+			int step_dim = step % data_step0.get_dim();
+			std::vector< hvt::point_cloud > current_kdtree_container;
+	
+			for ( hvt::point_cloud& subset : kdtree_container ) {
+				hvt::point_cloud partA;
+				hvt::point_cloud partB;
+				subset.split_at_coordinate( step_dim, partA, partB );
+				current_kdtree_container.push_back(partA);
+				current_kdtree_container.push_back(partB);
+			}
+	
+			// Add to container for next cycle
+			kdtree_container.clear();
+			for ( hvt::point_cloud pc : current_kdtree_container ) { kdtree_container.push_back(pc); }
+		}
+	
+		// Aggregate
+		current = std::chrono::high_resolution_clock::now();
+		duration = std::chrono::duration_cast< std::chrono::seconds >(current - start);
+		std::cout << "(time: " << duration.count() << " seconds) Aggregating in parts with minimum distance " << dist_aggregate << "... " << std::endl; 
+		std::vector< hvt::point_cloud > data_step1_container;
+	
+		#pragma omp parallel for 
+		for ( hvt::point_cloud& pc : kdtree_container ) { 
+			hvt::point_cloud pc_sparsified;
+			hvt::sparsify_points( pc, pc_sparsified, dist_aggregate );
+			data_step1_container.push_back(pc_sparsified);
+		}
+	
+		// Recombine
+		hvt::point_cloud data_step1_preaggregated;
+		for ( hvt::point_cloud& pc : data_step1_container ) {
+			std::vector< hvt::point > p;
+			pc.get_points(p);
+			data_step1_preaggregated.add_points(p);
+		}
+	
+		// Aggregate again
+		current = std::chrono::high_resolution_clock::now();
+		duration = std::chrono::duration_cast< std::chrono::seconds >(current - start);
+		std::cout << "(time: " << duration.count() << " seconds) Aggregating all together: from " << data_step1_preaggregated.get_size() << " points"; 
+		hvt::sparsify_points( data_step1_preaggregated, data_step1, dist_aggregate );
+		std::cout << " to " << data_step1.get_size() << " points" << std::endl; 
+	
+	} else { data_step1 = data_step0; }
 
 	// Add barycenters
 	current = std::chrono::high_resolution_clock::now();
@@ -181,7 +177,8 @@ int main (int argc, char** argv) {
 	// Export barycenters
 	if ( filename_bcs != NULL ) {
 		std::cout << "Exporting barycentric subdivision to file... " << std::flush; 
-		data_step1.export_points( filename_bcs );
+		const bool bcs_flag = false;
+		data_step1.export_points( filename_bcs, bcs_flag );
 		std::cout << "done" << std::endl;
 	}
 
@@ -197,7 +194,8 @@ int main (int argc, char** argv) {
 	current = std::chrono::high_resolution_clock::now();
 	duration = std::chrono::duration_cast< std::chrono::seconds >(current - start);
 	std::cout << "(time: " << duration.count() << " seconds) Exporting sparsified point cloud to file... " << std::flush; 
-	data_step3.export_points( filename_out );
+	const bool header_flag = false;
+	data_step3.export_points( filename_out, header_flag );
 	std::cout << "done" << std::endl;
 
 	// Exit
