@@ -157,16 +157,18 @@ namespace hvt {
 
 			// Set all points at once
 			void add_points( std::vector< hvt::point >& new_points ) {
-				points = new_points;
+				for ( hvt::point p : new_points ) {
+					points.push_back(p);
+				}
 			}
 
 			// Dimension of points in point cloud
-			hvt::index get_dim() {
+			int get_dim() {
 				return points[0].size();
 			}
 
 			// Number of points in point cloud
-			hvt::index get_size() {
+			int get_size() {
 				return points.size();
 			}
 
@@ -174,6 +176,17 @@ namespace hvt {
 			// Sets input reference to requested point
 			void get_point( const hvt::index index, hvt::point& my_point ) {
 				my_point = points[index];
+			}
+
+			// All points
+			void get_points( std::vector< hvt::point>& my_points ) {
+				my_points = points;
+			}
+
+			// Point at a given index, as CGAL point
+			Point_d get_point_asCGAL( const hvt::index index, hvt::point& my_point, hvt::index my_dim ) {
+				my_point = points[index];
+				return Point_d(my_dim, my_point.begin(), my_point.end());
 			}
 
 			// Coordinate of all points at a given dimension
@@ -187,12 +200,6 @@ namespace hvt {
 				for ( hvt::point p : points ) { 
 					my_point.push_back( p[dim_index] );
 				}
-			}
-
-			// Point at a given index, as CGAL point
-			Point_d get_point_asCGAL( const hvt::index index, hvt::point& my_point, hvt::index my_dim ) {
-				my_point = points[index];
-				return Point_d(my_dim, my_point.begin(), my_point.end());
 			}
 
 			// Neighbors of a point at a given index

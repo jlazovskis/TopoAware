@@ -6,8 +6,7 @@ namespace hvt {
 	void split_points(
 			hvt::point_cloud initial_point_cloud,
 			hvt::point_cloud& target_point_cloud,
-			std::vector<int>& points_added, 
-			const hvt::value sparsification_dist ) {
+			std::vector<int>& points_added) {
 		std::vector<int> new_point_count;
 		
 		// Check that the input point cloud has points initialized
