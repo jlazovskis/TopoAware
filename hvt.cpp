@@ -6,6 +6,7 @@
 #include <point_cloud.h>
 #include <split_points.h>
 #include <sparsify_points.h>
+#include <make_complement.h>
 
 // Main runtime
 int main (int argc, char** argv) {
