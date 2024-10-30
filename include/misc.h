@@ -57,4 +57,12 @@ namespace hvt {
 			target[i] = target[i]/num_points;
 		}
 	};
+
+	// Function that does float division, returns the quotient and remainder as objects
+	std::vector<hvt::value> fdiv(hvt::value numerator, hvt::value denominator) {
+		std::vector<hvt::value> return_array;
+		return_array.push_back(int(numerator/denominator));
+		return_array.push_back(std::fmod(numerator,denominator));
+		return return_array;
+	};
 }
