@@ -189,14 +189,24 @@ int main (int argc, char** argv) {
 	std::cout << "(time: " << duration.count() << " seconds) Sparsifying with minimum distance " << dist_sparsify << "... " << std::flush; 
 	hvt::point_cloud data_step3;
 	hvt::sparsify_points( data_step2, data_step3, dist_sparsify );
-	std::cout << " done (" << data_step3.get_size() << " points)\n"; 		
+	std::cout << " done (" << data_step3.get_size() << " points)\n";
+
+	// Make complement and export
+	current = std::chrono::high_resolution_clock::now();
+	duration = std::chrono::duration_cast< std::chrono::seconds >(current - start);
+	std::cout << "(time: " << duration.count() << " seconds) Making complement... " << std::flush; 
+	hvt::point_cloud data_step4;
+	hvt::make_complement( data_step3, data_step4, dist_sparsify );
+	const bool header_flag4 = false;
+	data_step4.export_points( filename_out, header_flag4 );
+	std::cout << " done (" << data_step4.get_size() << " points)\n"; 	
 
 	// Export
 	current = std::chrono::high_resolution_clock::now();
 	duration = std::chrono::duration_cast< std::chrono::seconds >(current - start);
 	std::cout << "(time: " << duration.count() << " seconds) Exporting sparsified point cloud to file... " << std::flush; 
-	const bool header_flag = false;
-	data_step3.export_points( filename_out, header_flag );
+	const bool header_flag3 = false;
+	data_step3.export_points( "complement-"+filename_out, header_flag3 );
 	std::cout << "done" << std::endl;
 
 	// Exit

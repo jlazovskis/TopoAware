@@ -20,7 +20,7 @@ namespace hvt {
 			std::vector< hvt::value > slice;
 			initial_point_cloud.get_slice(d, slice);
 		    const auto [min, max] = std::minmax_element(begin(slice), end(slice));
-		    ranges.push_back(std::make_pair(min,max));
+		    ranges.push_back(std::make_pair(min-step_size,max+step_size));
 		}
 
 		// Get number of steps in each dimension
@@ -58,15 +58,17 @@ namespace hvt {
 		}
 
 		// Initialize the points in the positions that have not been dropped
-		target_point_cloud.add_point();
 		for ( int i=0; i<total_points; i++ ) {
 			if ( point_tracker[i] ) {
 				hvt::point current_point;
-				
-				
-
+				int multiplier = 1;
+				for ( int d=0; d<=dim; d++ ) {
+					const auto coeff = std::div(i%(multiplier*steps_bydim[d]), multiplier);
+					current_point.push_back(ranges[d].first + coeff.quot*step_size);
+					multiplier = multiplier*steps_bydim[d];
+				}
+				target_point_cloud.add_point(current_point);
 			}
 		}
-
 	};
 }
