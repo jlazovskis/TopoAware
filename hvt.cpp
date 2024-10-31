@@ -4,6 +4,7 @@
 
 #include <misc.h>
 #include <point_cloud.h>
+#include <point_grid.h>
 #include <split_points.h>
 #include <sparsify_points.h>
 #include <make_complement.h>
@@ -201,13 +202,13 @@ int main (int argc, char** argv) {
 		current = std::chrono::high_resolution_clock::now();
 		duration = std::chrono::duration_cast< std::chrono::seconds >(current - start);
 		std::cout << "(time: " << duration.count() << " seconds) Making complement... " << std::flush; 
-		hvt::point_cloud data_step4;
-		std::vector<int> points_dropped;
-		hvt::make_complement( data_step3, data_step4, 23*dist_sparsify, points_dropped );
+		hvt::point_grid data_step4;
+		data_step4.construct_from_point_cloud(data_step3, 23*dist_sparsify );
 		const bool header_flag4 = false;
+		const bool complement_flag4 = true;
 		//std::string filename_out_str(filename_out);
 		//data_step4.export_points( "complement-"+filename_out_str, header_flag4 );
-		data_step4.export_points( "../complement-out.csv", header_flag4 );
+		data_step4.export_points( "../complement-out.csv", header_flag4, complement_flag4 );
 		std::cout << " done (" << points_dropped[0] << " points initially, " << points_dropped[1] << " after)\n"; 	
 	}
 

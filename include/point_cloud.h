@@ -1,5 +1,5 @@
 // This file is part of hypervolume-t 
-// Header file for the point_cloud class
+// Header file for the point_cloud classs
 
 namespace hvt {
 
