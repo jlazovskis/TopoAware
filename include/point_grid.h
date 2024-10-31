@@ -82,12 +82,17 @@ namespace hvt {
 						current_location += current_summand;
 					}
 		
-					// FIX TO GENERALIZE: remove all around point
+					// Remove all around point
 					std::vector<int> current_locations;
 					current_locations.push_back(current_location);
 					current_locations.push_back(current_location+1);
-					current_locations.push_back(current_location+steps_bydim[0]);
-					current_locations.push_back(current_location+steps_bydim[0]+1);
+					int coeff current_coeff = 1;
+					for ( int d=0; d<(dim-1); d++ ) {
+						std::vector<int> temp_locations;
+						current_coeff = current_coeff*steps_bydim[d];
+						for (int loc : current_locations) { temp_locations.push_back(loc+current_coeff); temp_locations.push_back(loc+current_coeff+1); }
+						for (int loc : temp_locations) { current_locations.push_back(loc); }
+					}
 					for ( int i : current_locations ) {
 						if ( i < total_points ) {
 							point_tracker[i] = (true || point_tracker[i]);
@@ -125,21 +130,46 @@ namespace hvt {
 			// Add a point to the end of the list of points
 			void add_point( hvt::point new_point ) { points.push_back(new_point); };
 
-			// Set associated grid
-			void set_point_grid(std::vector<bool>& my_grid) { grid = my_grid; };
+			// Set associated grids
+			void set_point_grids(std::vector<bool>& my_grid) {
+				grid = my_grid; 
+				grid_complement = my_grid; 
+				for ( int i=0; i<grid.size(); i++ ) { grid_complement[i] = !grid_complement[i]; }
+			};
+
+			// Get associated grid
+			void get_point_grid(std::vector<bool>& my_grid) { my_grid = grid; };
 
 			// Set step size
 			void set_step_size(float my_step_size) { step_size = my_step_size; };
 
-			// Set associated grid
-			void set_point_grid(std::vector<bool>& my_grid) { grid = my_grid; };
+			// Construct a True / False indicator for a component starting from a given (indexed) location
+			void get_component( std::vector<bool>& vector_to_fill, int start_index ) {
 
-			// Construct a True / False indicator for a component starting froma given (indexed) location
-			void get_component( std::vector<bool>& vector_to_fill, int start_location ) {
+				// Check that everything is fine
+				assert(vector_to_fill.size() == grid.size());
+				assert(start_index >= 0);
+				assert(start_index < grid.size());
 
-				// Check all is as expected
-				// Assert that vector_to_fill has the same size as gridification
-				// assert(i < points.size());
+				// Mark current location as being in the component
+				vector_to_fill[start_index] = true;
+
+				// Go to every neighboring location
+				std::vector<int> neighbors{start_index-1, start_index, start_index+1};
+				int coeff current_coeff = 1;
+				for ( int d=0; d<(dim-1); d++ ) {
+					std::vector<int> temp_neighbors;
+					current_coeff = current_coeff*steps_bydim[d];
+					for (int loc : neighbors) { temp_neighbors.push_back(loc+current_coeff); temp_neighbors.push_back(loc-current_coeff); }
+					for (int loc : temp_neighbors) { neighbors.push_back(loc); }
+				}
+				for ( int i : neighbors ) {
+					if ( (i >= 0) && (i < grid.size()) ) {
+						if ( !vector_to_fill[start_index] ) {
+							get_component(vector_to_fill, i);
+						}
+					}
+				}
 			};
 
 			// Export points by calling the same function for the associated class
