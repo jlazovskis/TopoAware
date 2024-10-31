@@ -7,7 +7,6 @@
 #include <point_grid.h>
 #include <split_points.h>
 #include <sparsify_points.h>
-#include <make_complement.h>
 
 // Main runtime
 int main (int argc, char** argv) {
@@ -209,7 +208,7 @@ int main (int argc, char** argv) {
 		//std::string filename_out_str(filename_out);
 		//data_step4.export_points( "complement-"+filename_out_str, header_flag4 );
 		data_step4.export_points( "../complement-out.csv", header_flag4, complement_flag4 );
-		std::cout << " done (" << points_dropped[0] << " points initially, " << points_dropped[1] << " after)\n"; 	
+		std::cout << " done (" << data_step4.get_size() << " points in full grid, " << data_step4.get_nonzero_size() << " in shape)\n"; 	
 	}
 
 	// Export

@@ -27,7 +27,7 @@ namespace hvt {
 			point_grid() {};
 
 			// Constructor from point cloud
-			construct_from_point_cloud( hvt::point_cloud initial_point_cloud, float requested_step_size ) {
+			void construct_from_point_cloud( hvt::point_cloud initial_point_cloud, float requested_step_size ) {
 				// Set values
 				point_cloud = initial_point_cloud;
 				step_size = requested_step_size;
@@ -86,7 +86,7 @@ namespace hvt {
 					std::vector<int> current_locations;
 					current_locations.push_back(current_location);
 					current_locations.push_back(current_location+1);
-					int coeff current_coeff = 1;
+					int current_coeff = 1;
 					for ( int d=0; d<(dim-1); d++ ) {
 						std::vector<int> temp_locations;
 						current_coeff = current_coeff*steps_bydim[d];
@@ -122,10 +122,10 @@ namespace hvt {
 			};
 
 			// Set associated point_cloud
-			void set_point_cloud(hvt::point_cloud& my_cloud) { associated_point_cloud = my_cloud; };
+			void set_point_cloud(hvt::point_cloud& my_cloud) { point_cloud = my_cloud; };
 
 			// Get associated point_cloud
-			void get_point_cloud(hvt::point_cloud& my_cloud) { my_cloud = associated_point_cloud; };
+			void get_point_cloud(hvt::point_cloud& my_cloud) { my_cloud = point_cloud; };
 
 			// Add a point to the end of the list of points
 			void add_point( hvt::point new_point ) { points.push_back(new_point); };
@@ -143,6 +143,10 @@ namespace hvt {
 			// Set step size
 			void set_step_size(float my_step_size) { step_size = my_step_size; };
 
+			// Get size
+			int get_size() { return grid.size(); }
+			int get_nonzero_size() { int i = 0; for ( bool b : grid ) { if ( b ) { i++; } } return i; }
+
 			// Construct a True / False indicator for a component starting from a given (indexed) location
 			void get_component( std::vector<bool>& vector_to_fill, int start_index ) {
 
@@ -155,8 +159,9 @@ namespace hvt {
 				vector_to_fill[start_index] = true;
 
 				// Go to every neighboring location
+				const int dim = point_cloud.get_dim();
 				std::vector<int> neighbors{start_index-1, start_index, start_index+1};
-				int coeff current_coeff = 1;
+				int current_coeff = 1;
 				for ( int d=0; d<(dim-1); d++ ) {
 					std::vector<int> temp_neighbors;
 					current_coeff = current_coeff*steps_bydim[d];
@@ -177,7 +182,7 @@ namespace hvt {
 				hvt::point_cloud pc;
 				if ( complement_bool ) { pc.add_points(points); }
 				else { pc.add_points(points_complement); }
-				pc.export_points(filename, header); 
+				pc.export_points(filename, header_bool); 
 	
 			};
 
