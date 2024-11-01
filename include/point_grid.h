@@ -90,7 +90,7 @@ namespace hvt {
 					for ( int d=0; d<(dim-1); d++ ) {
 						std::vector<int> temp_locations;
 						current_coeff = current_coeff*steps_bydim[d];
-						for (int loc : current_locations) { temp_locations.push_back(loc+current_coeff); temp_locations.push_back(loc+current_coeff+1); }
+						for (int loc : current_locations) { temp_locations.push_back(loc+current_coeff); }
 						for (int loc : temp_locations) { current_locations.push_back(loc); }
 					}
 					for ( int i : current_locations ) {

@@ -13,9 +13,11 @@ int main (int argc, char** argv) {
 	const char* filename_in = nullptr;
 	const char* filename_out = nullptr;
 	const char* filename_bcs = nullptr;
+	const char* filename_grid = nullptr;
 	hvt::value dist_aggregate = 0;
 	hvt::value dist_barycenter = 0;
 	hvt::value dist_sparsify = 0;
+	hvt::value dist_grid = 0;
 	int kdtree_splits = 1;
 	bool make_complement = false;
 
@@ -56,6 +58,12 @@ int main (int argc, char** argv) {
 			size_t next_pos;
 			dist_sparsify = std::stof(parameter, &next_pos);
 
+		// Grid step size
+		} else if (arg == "--gdist") {
+			std::string parameter = std::string(argv[++i]);
+			size_t next_pos;
+			dist_grid = std::stof(parameter, &next_pos);
+
 		// Number of times to do kd-tree splitting
 		// The number of regions will be 2 to the exponent of this number
 		} else if (arg == "--kdtree_splits") {
@@ -66,6 +74,7 @@ int main (int argc, char** argv) {
 		// Flag to determine whether or not to make complement
 		} else if (arg == "--make_complement") {
 			make_complement = true;
+			filename_grid = argv[++i];
 		}
 	}
 
@@ -202,12 +211,12 @@ int main (int argc, char** argv) {
 		duration = std::chrono::duration_cast< std::chrono::seconds >(current - start);
 		std::cout << "(time: " << duration.count() << " seconds) Making complement... " << std::flush; 
 		hvt::point_grid data_step4;
-		data_step4.construct_from_point_cloud(data_step3, 23*dist_sparsify );
+		data_step4.construct_from_point_cloud(data_step3, dist_grid );
 		const bool header_flag4 = false;
 		const bool complement_flag4 = true;
 		//std::string filename_out_str(filename_out);
 		//data_step4.export_points( "complement-"+filename_out_str, header_flag4 );
-		data_step4.export_points( "../complement-out.csv", header_flag4, complement_flag4 );
+		data_step4.export_points( filename_grid, header_flag4, complement_flag4 );
 		std::cout << " done (" << data_step4.get_size() << " points in full grid, " << data_step4.get_nonzero_size() << " in shape)\n"; 	
 	}
 
