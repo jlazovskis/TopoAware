@@ -1,7 +1,7 @@
-// This file is part of hypervolume-t 
+// This file is part of TopoAware 
 // Header file for the point_cloud classs
 
-namespace hvt {
+namespace tpaw {
 
 	// Dimension and point types
 	typedef CGAL::Epick_d< CGAL::Dynamic_dimension_tag > kernel;
@@ -11,14 +11,14 @@ namespace hvt {
 
 		private:
 			// The points
-			std::vector< hvt::point > points;
+			std::vector< tpaw::point > points;
 
 			// A list of neighbors for each point
-			std::vector< hvt::neighbors > all_neighbors;
+			std::vector< tpaw::neighbors > all_neighbors;
 
 			// Distance between pairs of points at given indices
 			// Modified from from https://github.com/Ripser
-			float dist( const hvt::index i, const hvt::index j ) const {
+			float dist( const tpaw::index i, const tpaw::index j ) const {
 				assert(i < points.size());
 				assert(j < points.size());
 				return std::sqrt(
@@ -56,9 +56,9 @@ namespace hvt {
 				std::string line;
 				std::ifstream input_stream( filename.c_str() );
 
-				hvt::value value;
+				tpaw::value value;
 				while (std::getline(input_stream, line)) {
-					hvt::point point;
+					tpaw::point point;
 					std::istringstream s(line);
 					while (s >> value) {
 						point.push_back(value);
@@ -85,7 +85,7 @@ namespace hvt {
 				}
 
 				// Write values
-				for ( const hvt::point& point : points ) { 
+				for ( const tpaw::point& point : points ) { 
   					outfile << point[0];
 					for ( int i = 1; i < get_dim(); i++ ) {
 	  					outfile << "," << point[i];
@@ -99,18 +99,18 @@ namespace hvt {
 
 			// Compute neighbors at a certain distance (adapted from https://github.com/Ripser)
 			// Only find neighbors at higher indices, to skip duplicates later
-			void find_neighbors( const hvt::value threshold ) {
+			void find_neighbors( const tpaw::value threshold ) {
 
 				// Get container for data
 				this->all_neighbors = all_neighbors;
 
 				// Iterate
-				for ( hvt::index i = 0; i < points.size(); ++i ) {
+				for ( tpaw::index i = 0; i < points.size(); ++i ) {
 
 					// Make temporary neighbor vector
-                    std::vector< hvt::index_diameter_t > temp_nb;
-					for (hvt::index j = i+1; j < points.size(); ++j) {
-						hvt::value d = dist(i, j);
+                    std::vector< tpaw::index_diameter_t > temp_nb;
+					for (tpaw::index j = i+1; j < points.size(); ++j) {
+						tpaw::value d = dist(i, j);
 						if (d <= threshold) {
 							// std::cout << i << " " << j << "\n";
 							temp_nb.push_back({j, d});
@@ -123,10 +123,10 @@ namespace hvt {
 			};
 
 			// Split an input point point cloud in two parts, based on the order of a given coordinate
-			void split_at_coordinate( const int dim_index, hvt::point_cloud& first, hvt::point_cloud& second ) {
+			void split_at_coordinate( const int dim_index, tpaw::point_cloud& first, tpaw::point_cloud& second ) {
 
 				// Get slice
-       			hvt::point target;
+       			tpaw::point target;
        			get_slice(dim_index, target);
 
   				// Adapted from https://stackoverflow.com/a/12399290
@@ -153,13 +153,13 @@ namespace hvt {
 			}
 
 			// Add a point to the end of the list of points
-			void add_point( hvt::point new_point ) {
+			void add_point( tpaw::point new_point ) {
 				points.push_back(new_point);
 			}
 
 			// Set all points at once
-			void add_points( std::vector< hvt::point >& new_points ) {
-				for ( hvt::point p : new_points ) {
+			void add_points( std::vector< tpaw::point >& new_points ) {
+				for ( tpaw::point p : new_points ) {
 					points.push_back(p);
 				}
 			}
@@ -176,42 +176,42 @@ namespace hvt {
 
 			// Point at a given index
 			// Sets input reference to requested point
-			void get_point( const hvt::index index, hvt::point& my_point ) {
+			void get_point( const tpaw::index index, tpaw::point& my_point ) {
 				my_point = points[index];
 			}
 
 			// All points
-			void get_points( std::vector< hvt::point>& my_points ) {
+			void get_points( std::vector< tpaw::point>& my_points ) {
 				my_points = points;
 			}
 
 			// Point at a given index, as CGAL point
-			Point_d get_point_asCGAL( const hvt::index index, hvt::point& my_point, hvt::index my_dim ) {
+			Point_d get_point_asCGAL( const tpaw::index index, tpaw::point& my_point, tpaw::index my_dim ) {
 				my_point = points[index];
 				return Point_d(my_dim, my_point.begin(), my_point.end());
 			}
 
 			// Coordinate of all points at a given dimension
 			// Sets input reference to requested slice
-			void get_slice( const int dim_index, hvt::point& my_point ) {
+			void get_slice( const int dim_index, tpaw::point& my_point ) {
 
 				// Check that the requested dimension index is admissible
 				assert ( dim_index >= 0 );
 				assert ( dim_index < points[0].size() );
 
-				for ( hvt::point p : points ) { 
+				for ( tpaw::point p : points ) { 
 					my_point.push_back( p[dim_index] );
 				}
 			}
 
 			// Neighbors of a point at a given index
 			// Sets input reference to requested neighbor
-			void get_neighbors( const hvt::index index, hvt::neighbors& neighbors ) {
+			void get_neighbors( const tpaw::index index, tpaw::neighbors& neighbors ) {
 				neighbors = all_neighbors[index];
 			}
 
 			// Distance among points, input as indices
-			float get_dist( hvt::index i, hvt::index j ) {
+			float get_dist( tpaw::index i, tpaw::index j ) {
 				return dist(i,j);
 			}
 

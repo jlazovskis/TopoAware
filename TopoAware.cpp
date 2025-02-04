@@ -14,10 +14,10 @@ int main (int argc, char** argv) {
 	const char* filename_out = nullptr;
 	const char* filename_bcs = nullptr;
 	const char* filename_grid = nullptr;
-	hvt::value dist_aggregate = 0;
-	hvt::value dist_barycenter = 0;
-	hvt::value dist_sparsify = 0;
-	hvt::value dist_grid = 0;
+	tpaw::value dist_aggregate = 0;
+	tpaw::value dist_barycenter = 0;
+	tpaw::value dist_sparsify = 0;
+	tpaw::value dist_grid = 0;
 	int kdtree_splits = 1;
 	bool make_complement = false;
 
@@ -105,7 +105,7 @@ int main (int argc, char** argv) {
 	auto start = std::chrono::high_resolution_clock::now();
 	
 	// Initialize point cloud class
-	hvt::point_cloud data_step0;
+	tpaw::point_cloud data_step0;
 
 	// Read input file
 	auto current = std::chrono::high_resolution_clock::now();
@@ -120,7 +120,7 @@ int main (int argc, char** argv) {
 	else { std::cout << "done (" << data_step0.get_size() << " points)\n";}
 
 	// Split into parts for aggregation
-	hvt::point_cloud data_step1;
+	tpaw::point_cloud data_step1;
 	if ( dist_aggregate > 0 ) {
 
 		current = std::chrono::high_resolution_clock::now();
@@ -128,17 +128,17 @@ int main (int argc, char** argv) {
 		std::cout << "(time: " << duration.count() << " seconds) Splitting dataset " << kdtree_splits << " times...\n";
 	
 		// Initialize
-		std::vector< hvt::point_cloud > kdtree_container;
+		std::vector< tpaw::point_cloud > kdtree_container;
 		kdtree_container.push_back(data_step0);
 	
 		// Iterate requested number of times
     	for ( int step = 0; step<kdtree_splits; step++ ) {
 			int step_dim = step % data_step0.get_dim();
-			std::vector< hvt::point_cloud > current_kdtree_container;
+			std::vector< tpaw::point_cloud > current_kdtree_container;
 	
-			for ( hvt::point_cloud& subset : kdtree_container ) {
-				hvt::point_cloud partA;
-				hvt::point_cloud partB;
+			for ( tpaw::point_cloud& subset : kdtree_container ) {
+				tpaw::point_cloud partA;
+				tpaw::point_cloud partB;
 				subset.split_at_coordinate( step_dim, partA, partB );
 				current_kdtree_container.push_back(partA);
 				current_kdtree_container.push_back(partB);
@@ -146,26 +146,26 @@ int main (int argc, char** argv) {
 	
 			// Add to container for next cycle
 			kdtree_container.clear();
-			for ( hvt::point_cloud pc : current_kdtree_container ) { kdtree_container.push_back(pc); }
+			for ( tpaw::point_cloud pc : current_kdtree_container ) { kdtree_container.push_back(pc); }
 		}
 	
 		// Aggregate
 		current = std::chrono::high_resolution_clock::now();
 		duration = std::chrono::duration_cast< std::chrono::seconds >(current - start);
 		std::cout << "(time: " << duration.count() << " seconds) Aggregating in parts with minimum distance " << dist_aggregate << "... " << std::endl; 
-		std::vector< hvt::point_cloud > data_step1_container;
+		std::vector< tpaw::point_cloud > data_step1_container;
 	
 		#pragma omp parallel for 
-		for ( hvt::point_cloud& pc : kdtree_container ) { 
-			hvt::point_cloud pc_sparsified;
-			hvt::sparsify_points( pc, pc_sparsified, dist_aggregate );
+		for ( tpaw::point_cloud& pc : kdtree_container ) { 
+			tpaw::point_cloud pc_sparsified;
+			tpaw::sparsify_points( pc, pc_sparsified, dist_aggregate );
 			data_step1_container.push_back(pc_sparsified);
 		}
 	
 		// Recombine
-		hvt::point_cloud data_step1_preaggregated;
-		for ( hvt::point_cloud& pc : data_step1_container ) {
-			std::vector< hvt::point > p;
+		tpaw::point_cloud data_step1_preaggregated;
+		for ( tpaw::point_cloud& pc : data_step1_container ) {
+			std::vector< tpaw::point > p;
 			pc.get_points(p);
 			data_step1_preaggregated.add_points(p);
 		}
@@ -174,7 +174,7 @@ int main (int argc, char** argv) {
 		current = std::chrono::high_resolution_clock::now();
 		duration = std::chrono::duration_cast< std::chrono::seconds >(current - start);
 		std::cout << "(time: " << duration.count() << " seconds) Aggregating all together: from " << data_step1_preaggregated.get_size() << " points"; 
-		hvt::sparsify_points( data_step1_preaggregated, data_step1, dist_aggregate );
+		tpaw::sparsify_points( data_step1_preaggregated, data_step1, dist_aggregate );
 		std::cout << " to " << data_step1.get_size() << " points" << std::endl; 
 	
 	} else { data_step1 = data_step0; }
@@ -184,9 +184,9 @@ int main (int argc, char** argv) {
 	duration = std::chrono::duration_cast< std::chrono::seconds >(current - start);
 	std::cout << "(time: " << duration.count() << " seconds) Adding barycenters to all pairs and triples within " << dist_barycenter << "... " << std::flush; 
 	data_step1.find_neighbors( dist_barycenter );
-	hvt::point_cloud data_step2;
+	tpaw::point_cloud data_step2;
 	std::vector<int> points_added;
-	hvt::split_points( data_step1, data_step2, points_added );
+	tpaw::split_points( data_step1, data_step2, points_added );
 	std::cout << " done (" << data_step2.get_size() << " points = " << points_added[0] << " from pairs, " << points_added[1] << " from triples)\n";
 
 	// Export barycenters
@@ -201,8 +201,8 @@ int main (int argc, char** argv) {
 	current = std::chrono::high_resolution_clock::now();
 	duration = std::chrono::duration_cast< std::chrono::seconds >(current - start);
 	std::cout << "(time: " << duration.count() << " seconds) Sparsifying with minimum distance " << dist_sparsify << "... " << std::flush; 
-	hvt::point_cloud data_step3;
-	hvt::sparsify_points( data_step2, data_step3, dist_sparsify );
+	tpaw::point_cloud data_step3;
+	tpaw::sparsify_points( data_step2, data_step3, dist_sparsify );
 	std::cout << " done (" << data_step3.get_size() << " points)\n";
 
 	if ( make_complement ) {
@@ -210,7 +210,7 @@ int main (int argc, char** argv) {
 		current = std::chrono::high_resolution_clock::now();
 		duration = std::chrono::duration_cast< std::chrono::seconds >(current - start);
 		std::cout << "(time: " << duration.count() << " seconds) Making complement... " << std::flush; 
-		hvt::point_grid data_step4;
+		tpaw::point_grid data_step4;
 		data_step4.construct_from_point_cloud(data_step3, dist_grid );
 		const bool header_flag4 = false;
 		const bool complement_flag4 = true;

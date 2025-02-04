@@ -1,6 +1,6 @@
-\name{hvt-package}
-\alias{hvt-package}
-\alias{hvt}
+\name{TopoAware-package}
+\alias{TopoAware-package}
+\alias{TopoAware}
 \docType{package}
 \title{
   Topologically aware inference as an alternative to kernel density estimation

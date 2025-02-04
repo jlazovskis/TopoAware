@@ -1,4 +1,4 @@
-// This file is part of hypervolume-t 
+// This file is part of TopoAware 
 // Header file for all includes, special types, math functions
 
 // stl
@@ -15,21 +15,21 @@
 #include <gudhi/sparsify_point_set.h>
 #include <CGAL/Epick_d.h>
 
-// hvt
-namespace hvt {
+// tpaw
+namespace tpaw {
     typedef int64_t index;
 	typedef double value;
-	typedef std::vector< hvt::value > point;
+	typedef std::vector< tpaw::value > point;
 
 	// A pair type to hold an index and a distance, meant for neighbors of a point
 	// Adapted from https://github.com/Ripser
-	typedef std::pair<hvt::index, hvt::value> index_diameter_t;
-	typedef std::vector<hvt::index_diameter_t> neighbors;
-	hvt::index get_index(const index_diameter_t& i) { return i.first; }
-	hvt::value get_diameter(const index_diameter_t& i) { return i.second; }
+	typedef std::pair<tpaw::index, tpaw::value> index_diameter_t;
+	typedef std::vector<tpaw::index_diameter_t> neighbors;
+	tpaw::index get_index(const index_diameter_t& i) { return i.first; }
+	tpaw::value get_diameter(const index_diameter_t& i) { return i.second; }
 
 	// Function that returns the average of points in an input list of points
-	void point_average( hvt::point base, std::vector<hvt::point> neighbor_points, hvt::point& target) {
+	void point_average( tpaw::point base, std::vector<tpaw::point> neighbor_points, tpaw::point& target) {
 
 		// Get number of points and dimension
 		const int num_points = neighbor_points.size()+1;
@@ -41,12 +41,12 @@ namespace hvt {
 		assert (denominator > 1);
 
 		// Place base point values in target point
-		for (const hvt::value value : base) {
+		for (const tpaw::value value : base) {
 			target.push_back(value); 
 		}
 
 		// Add neighboring point values to target point coordinates
-		for ( const hvt::point point : neighbor_points) { 
+		for ( const tpaw::point point : neighbor_points) { 
 			for ( int i = 0; i < dim; i++ ) {
 				target[i] += point[i];
 			}
@@ -59,8 +59,8 @@ namespace hvt {
 	};
 
 	// Function that does float division, returns the quotient and remainder as objects
-	std::vector<hvt::value> fdiv(hvt::value numerator, hvt::value denominator) {
-		std::vector<hvt::value> return_array;
+	std::vector<tpaw::value> fdiv(tpaw::value numerator, tpaw::value denominator) {
+		std::vector<tpaw::value> return_array;
 		return_array.push_back(int(numerator/denominator));
 		return_array.push_back(std::fmod(numerator,denominator));
 		return return_array;

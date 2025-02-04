@@ -4,6 +4,7 @@
 
 #include <misc.h>
 #include <point_cloud.h>
+#include <point_grid.h>
 #include <split_points.h>
 #include <sparsify_points.h>
 
@@ -24,13 +25,13 @@ Rcpp::DataFrame topological_hypervolume(
 	auto start = std::chrono::high_resolution_clock::now();
 
 	// Initialize point cloud class
-	hvt::point_cloud data_step0;
+	tpaw::point_cloud data_step0;
 
 	//R// Convert input from R to C++
     const int dim = data.size();
     const int samples = data.nrows();
     for ( int i = 0; i < samples; i++ ) {
-    	hvt::point point;
+    	tpaw::point point;
     	for ( int j = 0; j < dim; j++ ) {
         	Rcpp::NumericVector column = data[j];
     		point.push_back(column[i]);
@@ -43,15 +44,15 @@ Rcpp::DataFrame topological_hypervolume(
 
 	// Add barycenters
 	std::cout << "Adding barycenters to all pairs and triples within " << dist_barycenter << "... " << std::flush; 
-	hvt::point_cloud data_step1;
+	tpaw::point_cloud data_step1;
 	std::vector<int> points_added;
-	hvt::split_points( data_step0, data_step1, points_added, dist_barycenter );
+	tpaw::split_points( data_step0, data_step1, points_added, dist_barycenter );
 	std::cout << " done (" << data_step1.get_size() << " points = " << points_added[0] << " from pairs, " << points_added[1] << " from triples)\n";
 
 	// Sparsify
 	std::cout << "Sparsifying with minimum distance " << dist_sparsify << "... " << std::flush; 
-	hvt::point_cloud data_step2;
-	hvt::sparsify_points( data_step1, data_step2, dist_sparsify );
+	tpaw::point_cloud data_step2;
+	tpaw::sparsify_points( data_step1, data_step2, dist_sparsify );
 	std::cout << " done (" << data_step2.get_size() << " points)\n"; 		
 
 
@@ -66,7 +67,7 @@ Rcpp::DataFrame topological_hypervolume(
    	//R// Step 2: Go through all points and add values to columns
     const int samples_out = data_step2.get_size();
 	for ( int i = 0; i < samples_out; i++ ) {
-		hvt::point current_point;
+		tpaw::point current_point;
 		data_step2.get_point(i,current_point);
    		for ( int j = 0; j < dim; j++ ) {
    			data_out_container[j].push_back(current_point[j]);
