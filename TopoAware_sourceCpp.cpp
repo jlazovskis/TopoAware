@@ -1,4 +1,4 @@
-// hypervolume-t 0.1.0 (port to R)
+// TopoAware 0.1.1 (port to R)
 // Created by Jānis Lazovskis 
 // GPL-3 license 
 
@@ -11,14 +11,14 @@
 // [[Rcpp::export]]
 
 // Main runtime
-Rcpp::DataFrame hypervolume_t(
+Rcpp::DataFrame topological_hypervolume(
 		Rcpp::DataFrame data,       // The input data frame
 		float dist_barycenter,      // Distance below which all pairs and triples will be subdivided
 		float dist_sparsify)        // Minimum distance between all sparsified points
 	{
 
 	// TODO: Check arguments
-	std::cout << "hypervolume-t 0.1.0\n--------------------\n";
+	std::cout << "TopoAware 0.1.1\n--------------------\n";
 
 	// Start timer
 	auto start = std::chrono::high_resolution_clock::now();

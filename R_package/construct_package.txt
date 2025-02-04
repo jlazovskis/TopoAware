@@ -1,19 +1,19 @@
 # In R, run the following commands:
 library('Rcpp')
-Rcpp.package.skeleton("hvt", example_code=FALSE, cpp_files=c("hvt_sourceCpp.cpp"))
+Rcpp.package.skeleton("TopoAware", example_code=FALSE, cpp_files=c("TopoAware_sourceCpp.cpp"))
 
 # Add the file src/Makevars containg the following lines:
 PKG_CPPFLAGS += -I ../src/include/
 CXXFLAGS += $(CFLAGS) 
 
 # In the terminal, build the package
-R CMD build hvt
+R CMD build TopoAware
 
 # In the terminal, check the package
-R CMB check hvt
+R CMB check TopoAware
 
 # In R, install and test the package
-install.packages("hvt_0.1.0.tar.gz", repos=NULL, type="source", dependencies=TRUE)
-library('hvt')
+install.packages("TopoAware_0.1.0.tar.gz", repos=NULL, type="source", dependencies=TRUE)
+library('TopoAware')
 df <- read.csv('examples/2d_input.csv')
-df2 <- hypervolume_t(df, dist_barycenter=0.2, dist_sparsify=0.01)
+df2 <- topological_hypervolume(df, dist_barycenter=0.2, dist_sparsify=0.01)

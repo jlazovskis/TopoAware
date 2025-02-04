@@ -1,4 +1,4 @@
-// hypervolume-t 0.1.0
+// TopoAware 0.1.1
 // Created by Jānis Lazovskis 
 // GPL-3 license 
 
@@ -79,7 +79,7 @@ int main (int argc, char** argv) {
 	}
 
 	// Check arguments
-	std::cout << "hypervolume-t 0.1.0\n--------------------\n";
+	std::cout << "TopoAware 0.1.0\n--------------------\n";
 	if ( filename_in == NULL ) {
 		std::cerr << "Missing input file" << std::endl;
 		return 0;
