@@ -1,3 +1,13 @@
+# Move to root directory of this git repo
+cd TopoAware/
+
+# Copy files to the R_package directory
+cp TopoAware_sourceCpp.cpp R_package/TopoAware/src/TopoAware_sourceCpp.cpp
+cp include/misc.h R_package/TopoAware/src/include/misc.h
+cp include/point_cloud.h R_package/TopoAware/src/include/point_cloud.h
+cp include/sparsify_points.h R_package/TopoAware/src/include/sparsify_points.h
+cp include/split_points.h R_package/TopoAware/src/include/split_points.h
+
 # In R, run the following commands:
 library('Rcpp')
 Rcpp.package.skeleton("TopoAware", example_code=FALSE, cpp_files=c("TopoAware_sourceCpp.cpp"))

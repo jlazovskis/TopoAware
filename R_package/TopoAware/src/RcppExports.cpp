@@ -10,23 +10,23 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// hypervolume_t
+// TopoAware
 // Main runtime
-Rcpp::DataFrame hypervolume_t(Rcpp::DataFrame data, float dist_barycenter, float dist_sparsify);
-RcppExport SEXP _hvt_hypervolume_t(SEXP dataSEXP, SEXP dist_barycenterSEXP, SEXP dist_sparsifySEXP) {
+Rcpp::DataFrame topological_hypervolume(Rcpp::DataFrame data, float dist_barycenter, float dist_sparsify);
+RcppExport SEXP _hvt_topological_hypervolume(SEXP dataSEXP, SEXP dist_barycenterSEXP, SEXP dist_sparsifySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::DataFrame >::type data(dataSEXP);
     Rcpp::traits::input_parameter< float >::type dist_barycenter(dist_barycenterSEXP);
     Rcpp::traits::input_parameter< float >::type dist_sparsify(dist_sparsifySEXP);
-    rcpp_result_gen = Rcpp::wrap(hypervolume_t(data, dist_barycenter, dist_sparsify));
+    rcpp_result_gen = Rcpp::wrap(topological_hypervolume(data, dist_barycenter, dist_sparsify));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_hvt_hypervolume_t", (DL_FUNC) &_hvt_hypervolume_t, 3},
+    {"_hvt_topological_hypervolume", (DL_FUNC) &_hvt_topological_hypervolume, 3},
     {NULL, NULL, 0}
 };
 
