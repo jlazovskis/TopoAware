@@ -1,0 +1,7 @@
+R_package/TopoAware/src/TopoAware_sourceCpp.cpp
+R_package/TopoAware/src/include/misc.h
+R_package/TopoAware/src/include/point_cloud.h
+R_package/TopoAware/src/include/point_grid.h
+R_package/TopoAware/src/include/sparsify_points.h
+R_package/TopoAware/src/include/split_points.h
+
