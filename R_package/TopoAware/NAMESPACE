@@ -1,3 +1,3 @@
-useDynLib(hvt, .registration=TRUE)
+useDynLib(tpaw, .registration=TRUE)
 importFrom(Rcpp, evalCpp)
-export("hypervolume_t")
+export("TopoAware")

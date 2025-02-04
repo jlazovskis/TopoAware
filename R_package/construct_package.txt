@@ -10,22 +10,25 @@ do
 done
 cd ..
 
-# Move to the R directory 
-cd ../R_package/TopoAware/R
+# Move to the R root directory 
+cd TopoAware/R_package/TopoAware/
 
-# In this diretorty, open R. In R, run the following commands:
+# In this directory, open R. In R, run the following commands:
 library('Rcpp')
 Rcpp.package.skeleton("TopoAware", example_code=FALSE, cpp_files=c("TopoAware_sourceCpp.cpp"))
 
-# Add the file src/Makevars containg the following lines:
+# Close R. Add the file TopoAware/R_package/TopoAware/src/Makevars containg the following lines:
 PKG_CPPFLAGS += -I ../src/include/
 CXXFLAGS += $(CFLAGS) 
+
+# Move to the R_package directory 
+cd TopoAware/R_package/
 
 # In the terminal, build the package
 R CMD build TopoAware
 
 # In the terminal, check the package
-R CMB check TopoAware
+R CMD check TopoAware
 
 # In R, install and test the package
 install.packages("TopoAware_0.1.0.tar.gz", repos=NULL, type="source", dependencies=TRUE)

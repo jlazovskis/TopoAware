@@ -43,7 +43,16 @@ Compile `TopoAware`, for example with `g++`.
 
 Then run the program on a data set, indicating the distance `bdist` at which to add barycenters for 1-simplices and 2-simplices, and the distance `sdist` at which to sparsify by maintaining this minimum distance between any two points. Example with provided data below.
 
-    ./TopoAware --input examples/test_shape.csv --output examples/test_out.csv --bdist 0.5 --sdist 0.05
+    > ./TopoAware --input examples/test_shape.csv --output examples/test_out.csv --bdist 0.5 --sdist 0.05
+    > TopoAware 0.1.1
+    > --------------------
+    > (time: 0 seconds) Loading input file... done (1524 points)
+    > (time: 0 seconds) Adding barycenters to all pairs and triples within 0.5...  done (11795912 points = 129822 from pairs, 11664566 from triples)
+    > (time: 31 seconds) Sparsifying with minimum distance 0.0001...  done (39883 points)
+    > (time: 574 seconds) Exporting sparsified point cloud to file... done
+    > --------------------
+    > Finished in 574 seconds
+
 
 In general, `sdist < bdist`, as having the sparsification distance larger than the barycentric subdivision distance voids the need for barycentric subdivision. That is, just sparsifying the input data set would yield the same result as first subdividing, then sparsifying.
 

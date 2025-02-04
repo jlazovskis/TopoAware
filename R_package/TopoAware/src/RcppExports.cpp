@@ -13,7 +13,7 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 // TopoAware
 // Main runtime
 Rcpp::DataFrame topological_hypervolume(Rcpp::DataFrame data, float dist_barycenter, float dist_sparsify);
-RcppExport SEXP _hvt_topological_hypervolume(SEXP dataSEXP, SEXP dist_barycenterSEXP, SEXP dist_sparsifySEXP) {
+RcppExport SEXP _tpaw_topological_hypervolume(SEXP dataSEXP, SEXP dist_barycenterSEXP, SEXP dist_sparsifySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -26,11 +26,11 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_hvt_topological_hypervolume", (DL_FUNC) &_hvt_topological_hypervolume, 3},
+    {"_tpaw_topological_hypervolume", (DL_FUNC) &_tpaw_topological_hypervolume, 3},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_hvt(DllInfo *dll) {
+RcppExport void R_init_tpaw(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }
