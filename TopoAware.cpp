@@ -89,6 +89,7 @@ int main (int argc, char** argv) {
 		return 0;
 	}
 	if ( dist_aggregate < 0 ) {
+		// TODO: This should not be a critical error, simply proceed without aggregating
 		std::cerr << "Distance for aggregating either unset or nonpositive" << std::endl;
 		return 0;
 	}
@@ -122,6 +123,7 @@ int main (int argc, char** argv) {
 	// Split into parts for aggregation
 	tpaw::point_cloud data_step1;
 	if ( dist_aggregate > 0 ) {
+		// TODO: Split and return array of pointers to split pieces should be separate function
 
 		current = std::chrono::high_resolution_clock::now();
 		duration = std::chrono::duration_cast< std::chrono::seconds >(current - start);
