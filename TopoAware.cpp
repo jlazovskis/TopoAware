@@ -195,7 +195,7 @@ int main (int argc, char** argv) {
 	if ( filename_bcs != NULL ) {
 		std::cout << "Exporting barycentric subdivision to file... " << std::flush; 
 		const bool bcs_flag = false;
-		data_step1.export_points( filename_bcs, bcs_flag );
+		data_step2.export_points( filename_bcs, bcs_flag );
 		std::cout << "done" << std::endl;
 	}
 
