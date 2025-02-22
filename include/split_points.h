@@ -6,7 +6,8 @@ namespace tpaw {
 	void split_points(
 			tpaw::point_cloud initial_point_cloud,
 			tpaw::point_cloud& target_point_cloud,
-			std::vector<int>& points_added) {
+			std::vector<int>& points_added, 
+			tpaw::value dist_barycenter) {
 		std::vector<int> new_point_count;
 		
 		// Check that the input point cloud has points initialized
@@ -52,21 +53,24 @@ namespace tpaw {
 				for ( int k = j+1 ; k < current_neighbors.size() ; k++ ) {
 					const tpaw::index index_k = get_index(current_neighbors[k]);
 					const float dist_jk = initial_point_cloud.get_dist(index_j,index_k);
-		
 
-					// Add another neighboring point
-					tpaw::point current_point_c;
-					initial_point_cloud.get_point(index_k,current_point_c);
-					neighboring_points.push_back(current_point_c);
-					
-					// Declare, compute, record new point
-					tpaw::point new_point2;
-					tpaw::point_average( current_point, neighboring_points, new_point2 );
-					target_point_cloud.add_point(new_point2);
-					counter2 += 1;
-					
-					// Drop last element two have two starting points for next triple
-					neighboring_points.pop_back();
+					// Add midpoint only if triple intersection
+					if (dist_jk < dist_barycenter) {
+	
+						// Add another neighboring point
+						tpaw::point current_point_c;
+						initial_point_cloud.get_point(index_k,current_point_c);
+						neighboring_points.push_back(current_point_c);
+						
+						// Declare, compute, record new point
+						tpaw::point new_point2;
+						tpaw::point_average( current_point, neighboring_points, new_point2 );
+						target_point_cloud.add_point(new_point2);
+						counter2 += 1;
+						
+						// Drop last element two have two starting points for next triple
+						neighboring_points.pop_back();
+					}
 
 				}
 			}

@@ -188,7 +188,7 @@ int main (int argc, char** argv) {
 	data_step1.find_neighbors( dist_barycenter );
 	tpaw::point_cloud data_step2;
 	std::vector<int> points_added;
-	tpaw::split_points( data_step1, data_step2, points_added );
+	tpaw::split_points( data_step1, data_step2, points_added, dist_barycenter );
 	std::cout << " done (" << data_step2.get_size() << " points = " << points_added[0] << " from pairs, " << points_added[1] << " from triples)\n";
 
 	// Export barycenters
