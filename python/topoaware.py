@@ -1,10 +1,14 @@
-# packages
+# Packages for computing
 import numpy as np
 import pandas as pd
 import gudhi as gd
-from matplotlib import pyplot as plt
+from gudhi import subsampling as subs
 
-# functions
+# Packages for visualization, timing
+from matplotlib import pyplot as plt
+from timeit import default_timer
+
+# Functions
 
 # input: SimplexTree class, vertex coordinates (nrows=npoints, ncols=ndims)
 # output: collection of points, imput complex points + all barycenters of input complex simplices
