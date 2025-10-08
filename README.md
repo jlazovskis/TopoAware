@@ -1,6 +1,8 @@
 # TopoAware
 Topologically aware constructions for ecological hypervolumes
 
+**UNDER DEVELOPMENT:** This project is still being developed. Documentation and source code is not yet finalized. For more information, please contact [the developer](https://jlazovskis.com/).
+
 ## About
 The purpose of this software is to use topological tools, in terms of computational efficiency and theoretical guarantees, to construct hypervolumes for use in ecology. Hypervolumes are usually constructed as kernel density estimators, but those are often less interesting topologically at the expense of knowing more information (precisley "filling in" the holes of missing data). This software aims to retain toological information of the input sample while still providing the user with more information about the space in which the sample lies.
 
