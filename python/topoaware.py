@@ -29,9 +29,26 @@ def barycenters(simplex_tree, points):
 	return np.array(points_return)
 
 
+
+# input: collection of points, distance at which to construct simplices, maximum dimension (inclusive)
+# output: collection of points
+def barycentric_subdivision(points, radius, max_dim=2):
+
+	return 1
+
+
+
+# input: collection of points, distance at which to sparsify
+# output: collection of points
+def sparsification(points, min_dist):
+
+	return 1
+
+
+
 # input: collection of points, grid size interval, grid origin
 # output: collection of points, each at one of the grid points
-def grid_points(points, grid_interval, grid_origin=[0]):
+def gridification(points, grid_interval, grid_origin=[0]):
 
 	# check
 	dim_p = 0
@@ -48,10 +65,27 @@ def grid_points(points, grid_interval, grid_origin=[0]):
 		assert grid_origin.shape[0] == dim_p ; "Length (and type) of grid_origin must match length of elements of points" 
 
 	# compute
-	points_return = {}
+	points_return = set()
 	dim = points[0].shape[0]
 	for point in points:
-		points_return |= {tuple([(p-grid_origin[i])//grid_interval + grid_origin[i] for i,p in enumerate(point)])}
+		new_point = [float(grid_interval * ((p-grid_origin[i])//grid_interval) + grid_origin[i]) for i,p in enumerate(point)]
+		points_return |= set([tuple(new_point)])
 
 	# return
 	return points_return
+
+
+
+# input: collection of points, grid interval (inferred if not given)
+# output: collection of points
+def complement(points, grid_interval=0):
+
+	return 1
+
+
+
+# input: collection of points, grid interval (inferred if not given)
+# output: collection of points
+def thickening(points, grid_interval=0):
+
+	return 1
