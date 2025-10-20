@@ -8,10 +8,10 @@ from gudhi import subsampling as subs
 from matplotlib import pyplot as plt
 from timeit import default_timer
 
-# Functions
+
 
 # input: SimplexTree class, vertex coordinates (nrows=npoints, ncols=ndims)
-# output: collection of points, imput complex points + all barycenters of input complex simplices
+# output: collection of points (npoints x ndims), imput complex points + all barycenters of input complex simplices
 def barycenters(simplex_tree, points):
 	
 	# check
@@ -30,24 +30,24 @@ def barycenters(simplex_tree, points):
 
 
 
-# input: collection of points, distance at which to construct simplices, maximum dimension (inclusive)
-# output: collection of points
+# input: collection of points (npoints x ndims), distance at which to construct simplices, maximum dimension (inclusive)
+# output: collection of points (npoints x ndims)
 def barycentric_subdivision(points, radius, max_dim=2):
 
 	return 1
 
 
 
-# input: collection of points, distance at which to sparsify
-# output: collection of points
+# input: collection of points (npoints x ndims), distance at which to sparsify
+# output: collection of points (npoints x ndims)
 def sparsification(points, min_dist):
 
 	return 1
 
 
 
-# input: collection of points, grid size interval, grid origin
-# output: collection of points, each at one of the grid points
+# input: collection of points (npoints x ndims), grid size interval, grid origin
+# output: collection of points (npoints x ndims), each at one of the grid points
 def gridification(points, grid_interval, grid_origin=[0]):
 
 	# check
@@ -76,16 +76,43 @@ def gridification(points, grid_interval, grid_origin=[0]):
 
 
 
-# input: collection of points, grid interval (inferred if not given)
-# output: collection of points
+# input: collection of points (npoints x ndims), grid interval (inferred if not given)
+# output: collection of points (npoints x ndims)
 def complement(points, grid_interval=0):
 
 	return 1
 
 
 
-# input: collection of points, grid interval (inferred if not given)
-# output: collection of points
+# input: collection of points (npoints x ndims), grid interval (inferred if not given)
+# output: collection of points (npoints x ndims)
+# Comment: The expected input to this function is a grid. For example, the output of the gridification function 
 def thickening(points, grid_interval=0):
 
-	return 1
+	# Get grid interval
+	if grid_interval == 0:
+		assert False, "Must input grid interval, inferring interval not yet implemented"
+
+	# Get dimensions and prepare vectors
+	dim_p = 0
+	if type(points) == type([]):
+		assert len(points)>0 ; "Empy list passed"
+		dim_p = len(points[0])
+	elif type(points) == type(np.array([])):
+		assert points.shape[0]>0 ; "Empy list passed"
+		dim_p = points[0].shape[0]
+	dim_vectors = [np.array([grid_interval/2 if i==j else 0 for i in range(dim_p)]) for j in range(dim_p)]
+
+	# Multiply in as many dimensions
+	points_return = []
+	coeff_dict = {'0':-1, '1':0, '2':1}
+	for i in range(3**dim_p):
+		coeffs = [coeff_dict[dim_val] for dim_val in np.base_repr(i,base=3).zfill(dim_p)]
+		shift = np.sum([coeffs[dim]*dim_vectors[dim] for dim in range(dim_p)],axis=0)
+		for p in points:
+			points_return.append(np.array(p)+shift)
+
+	# Remove duplicates
+	points_return_clean = subs.sparsify_point_set(points=np.array(points_return), min_squared_dist=(grid_interval/10)**2)
+
+	return points_return_clean
