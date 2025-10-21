@@ -71,16 +71,47 @@ def gridification(points, grid_interval, grid_origin=[0]):
 		new_point = [float(grid_interval * ((p-grid_origin[i])//grid_interval) + grid_origin[i]) for i,p in enumerate(point)]
 		points_return |= set([tuple(new_point)])
 
-	# return
 	return points_return
 
 
 
 # input: collection of points (npoints x ndims), grid interval (inferred if not given)
 # output: collection of points (npoints x ndims)
-def complement(points, grid_interval=0):
+def complement(points, grid_interval=0, buffer=2):
 
-	return 1
+	# Get grid interval
+	if grid_interval == 0:
+		assert False, "Must input grid interval, inferring interval not yet implemented"
+
+	# Get dimensions and extremal values
+	dim_p = 0
+	max_vals = []
+	min_vals = []
+	if type(points) == type([]):
+		assert len(points)>0 ; "Empy list passed"
+		dim_p = len(points[0])
+		max_vals = [np.max(np.array(points).T[dim]) for dim in range(dim_p)]
+		min_vals = [np.min(np.array(points).T[dim]) for dim in range(dim_p)]
+	elif type(points) == type(np.array([])):
+		assert points.shape[0]>0 ; "Empy list passed"
+		dim_p = points[0].shape[0]
+		max_vals = [np.max(points.T[dim]) for dim in range(dim_p)]
+		min_vals = [np.min(points.T[dim]) for dim in range(dim_p)]
+	ranges = [np.rint((max_vals[dim]-min_vals[dim])/grid_interval).astype(int)+1+2*buffer for dim in range(dim_p)]
+
+	# Iterate over input
+	mask_array = np.ones(tuple(ranges),dtype=bool)
+	for p in points:
+		loc = [np.rint((p[dim]-min_vals[dim])/grid_interval).astype(int)+buffer for dim in range(dim_p)]
+		mask_array[tuple(loc)] = False
+
+	# Construct output
+	points_return = []
+	min_vals = np.array([min_vals[dim]-grid_interval*buffer for dim in range(dim_p)])
+	for loc in zip(*np.nonzero(mask_array)):
+		points_return.append(np.array(loc)*grid_interval + min_vals)
+
+	return points_return
 
 
 
