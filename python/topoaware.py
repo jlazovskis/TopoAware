@@ -10,7 +10,7 @@ from timeit import default_timer
 
 
 
-# input: SimplexTree class, vertex coordinates (nrows=npoints, ncols=ndims)
+# input: GUDHI SimplexTree class, vertex coordinates (nrows=npoints, ncols=ndims)
 # output: collection of points (npoints x ndims), imput complex points + all barycenters of input complex simplices
 def barycenters(simplex_tree, points):
 	
@@ -34,7 +34,12 @@ def barycenters(simplex_tree, points):
 # output: collection of points (npoints x ndims)
 def barycentric_subdivision(points, radius, max_dim=2):
 
-	return 1
+	# construct vr complex
+	complex_vr_container = gd.RipsComplex(points=points, max_edge_length=radius)
+	complex_vr = complex_vr_container.create_simplex_tree(max_dimension=max_dim)
+
+	# get barycenters and return
+	return barycenters(complex_vr, points)
 
 
 
