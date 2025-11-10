@@ -1,2 +1,0 @@
-PKG_CPPFLAGS += -I ../src/include/
-CXXFLAGS += $(CFLAGS) 

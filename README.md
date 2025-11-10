@@ -6,8 +6,8 @@ Topological tools to construct hypervolumes for use in ecology.
 The underlying methods of building related and topologically bounded point clouds are not restricted to use in ecology, though the motivation comes from ecology.
 The code in this repo is meant to be self-contained and easy to use.
 See the [Python notebook](https://github.com/jlazovskis/TopoAware/blob/main/python/example.ipynb) for a visual example of the intended use cases
-* [preprint](https://arxiv.org/abs/XXXX.YYYYY): Background on mathematical methods, stability results
-* [poster](https://www.jlazovskis.com/talks/2025-10-08-ires.pdf): At the "Interdisciplinary Research and Education Symposium", University of Aberdeen, Oct 2025
+* [preprint](https://arxiv.org/abs/XXXX.YYYYY): Background on mathematical methods, stability results, Nov 2025
+* [poster](https://www.jlazovskis.com/talks/2025-10-08-ires.pdf): Interdisciplinary Research and Education Symposium, University of Aberdeen, Oct 2025
 
 Ideas are borrowed from, and the code relies on:
 * [hypervolume](https://github.com/bblonder/hypervolume): The orginal program to generate hypervolumes via kernel density estimators
