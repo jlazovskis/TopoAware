@@ -1,12 +1,15 @@
 # TopoAware
-Topologically aware constructions for ecological hypervolumes
-* [preprint](https://arxiv.org/abs/XXXX.YYYYY): Background on mathematical methods, 
-* [poster](https://www.jlazovskis.com/talks/2025-10-08-ires.pdf): From the "Interdisciplinary Research and Education Symposium" at the University of Aberdeen, October 2025 
+Topologically aware constructions for ecological hypervolumes 
 
 ## About
-The purpose of this software is to use topological tools to construct hypervolumes for use in ecology.
-The underlying methods of building related and topologically bounded point clouds are not restricted to use in ecology.
-Ideas are borrowed from:
+Topological tools to construct hypervolumes for use in ecology.
+The underlying methods of building related and topologically bounded point clouds are not restricted to use in ecology, though the motivation comes from ecology.
+The code in this repo is meant to be self-contained and easy to use.
+See the [Python notebook]() for a visual example of the intended use cases
+* [preprint](https://arxiv.org/abs/XXXX.YYYYY): Background on mathematical methods, stability results
+* [poster](https://www.jlazovskis.com/talks/2025-10-08-ires.pdf): At the "Interdisciplinary Research and Education Symposium", University of Aberdeen, Oct 2025
+
+Ideas are borrowed from, and the code relies on:
 * [hypervolume](https://github.com/bblonder/hypervolume): The orginal program to generate hypervolumes via kernel density estimators
 * [gudhi](https://gudhi.inria.fr): Methods to construct simplicial complexes and sparsify point clouds
 
@@ -15,11 +18,12 @@ Ideas are borrowed from:
 `TopoAware` may be used by either downloading the individual file(s) in the language intended to be used, or by cloning the full repository, and then using the files. 
 
 ## Changelog
-The code in this repository is actively being developed by @jlazovskis.
+The code in this repository is actively being developed by [@jlazovskis](https://github.com/jlazovskis).
 
 - Python tasks
   - [x] Python code
   - [x] Python example notebook
+  - [ ] Computing and comparing persistence in notebook
 - R tasks
   - [ ] R code
   - [ ] R example file
