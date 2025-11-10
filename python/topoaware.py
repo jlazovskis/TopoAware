@@ -1,13 +1,7 @@
 # Packages for computing
 import numpy as np
-import pandas as pd
 import gudhi as gd
 from gudhi import subsampling as subs
-
-# Packages for visualization, timing
-from matplotlib import pyplot as plt
-from timeit import default_timer
-
 
 
 # input: GUDHI SimplexTree class, vertex coordinates (nrows=npoints, ncols=ndims)
@@ -47,7 +41,11 @@ def barycentric_subdivision(points, radius, max_dim=2):
 # output: collection of points (npoints x ndims)
 def sparsification(points, min_dist):
 
-	return 1
+	# sparsify
+	points_return = subs.sparsify_point_set(points=points, min_squared_dist=(min_dist)**2)
+
+	# return numpy array
+	return np.array(points_return)
 
 
 
@@ -76,7 +74,8 @@ def gridification(points, grid_interval, grid_origin=[0]):
 		new_point = [float(grid_interval * ((p-grid_origin[i])//grid_interval) + grid_origin[i]) for i,p in enumerate(point)]
 		points_return |= set([tuple(new_point)])
 
-	return points_return
+	# return numpy array
+	return np.array(list(points_return))
 
 
 
@@ -116,7 +115,8 @@ def complement(points, grid_interval=0, buffer=2):
 	for loc in zip(*np.nonzero(mask_array)):
 		points_return.append(np.array(loc)*grid_interval + min_vals)
 
-	return points_return
+	# Return as numpy array
+	return np.array(points_return)
 
 
 
@@ -151,4 +151,5 @@ def thickening(points, grid_interval=0):
 	# Remove duplicates
 	points_return_clean = subs.sparsify_point_set(points=np.array(points_return), min_squared_dist=(grid_interval/10)**2)
 
-	return points_return_clean
+	# Return as numpy array
+	return np.array(points_return_clean)
