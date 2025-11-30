@@ -1,3 +1,10 @@
+# Packages
+library(devtools)
+library(dplyr)
+
+# rgudhi fork
+install_github("jlazovskis/rgudhi-subsampling@export")
+
 # Functions
 barycenters <- function(simplex_tree, points){
 	return( 1 )
@@ -11,9 +18,26 @@ barycentric_subdivision <- function(points, radius, max_dim=2){
 	return( barycenters(complex_vr, points) )
 }
 
-
+# Points is either:
+#  * a list of points in Rn, or 
+#  * a data frame with nrows=npoints, and ncols=ndimensions
 sparsification <- function(points, min_dist){
-	return( 1 )
+
+	# Convert from data frame if necessary
+	if (class(points) == "data.frame"){
+		points_list <- apply(points, 1, as.numeric)
+		points_list <- split(points_list, seq(ncol(points_list)))
+	}
+	else {
+		stopifnot(class(points) == "list")
+		points_list <- points
+	}
+
+	# Ensure names are null
+	names(points_list) <- NULL
+
+	# Return Python function
+	return( sparsify_point_set(points_list, (min_dist)**2) )
 }
 
 
