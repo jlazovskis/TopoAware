@@ -35,18 +35,13 @@ barycenters <- function(simplex_tree, points){
 	# Standardize input
 	points_std <- standardize_points(points)
 
-	# Initiate output list
-	points_split <- list()
+	# Construct output
+	output <- st$get_simplices()$simplex # Access simplex indices
+		%>% lapply(function(x) x+1) # From 0-indexed to 1-indexed
+		%>% lapply(function(x) do.call(rbind,lapply(x,function(y) X[[y]]))) # Get points
+		%>% lapply(function(x) apply(x,2,mean)) # Take average
 
-	# Iterate over simplices
-	for (i in 1:nrow(simplex_tree$get_simplices())) {
-		indices <- lapply(simplex_tree$get_simplices()[i, ][[1]], function(x) x+1)
-		simplex_vertices <- do.call(rbind, points_std[indices[[1]]])
-		new_point <- apply(simplex_vertices, 2, mean)
-		points_split <- append(points_split, list(new_point))
-	}
- 
-	return( points_split )
+	return( output )
 }
 
 
@@ -86,8 +81,28 @@ gridification <- function(points, grid_interval, grid_origin){
 }
 
 
-complement <- function(points, grid_interval=0, buffer=2){
-	return( 1 )
+complement <- function(grid, grid_interval=0, buffer=2){
+
+	# Get min and max values
+	mins <- apply(do.call(rbind, grid), 2, min)
+	maxs <- apply(do.call(rbind, grid), 2, max)
+
+	# Create a full grid
+	ranges <- sapply(maxs-mins, function(x) x %/% grid_interval + buffer*2)
+	mask_array <- array(rep(TRUE,prod(ranges)),ranges)
+
+	# Iterate over input grid to remove existing values
+	for (i in 1:length(grid)) {
+		coords <- apply(grid[i][[1]]-mins, function(x) x %/% grid_interval + buffer)
+		mask_array <- do.call(`[<-`, c(list(arr), as.list(coords), list(FALSE)))
+	}
+
+	# Construct output
+	output <- which(mask_array==TRUE, arr.ind=TRUE) # Get correct indices
+		%>% apply(1, function(x) do.call(rbind,lapply(x, function(y) y*grid_interval))) # Get values
+		%>% apply(1, identity, simplify=FALSE) # Make as list of numeric
+
+	return( output )
 }
 
 
