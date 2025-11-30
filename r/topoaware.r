@@ -21,7 +21,7 @@ standardize_points <- function(input) {
 	# Ensure names are null
 	names(output) <- NULL
 
-	# Return
+	# Return output
 	return( output )
 }
 
@@ -51,24 +51,38 @@ barycenters <- function(simplex_tree, points){
 
 
 barycentric_subdivision <- function(points, radius, max_dim=2){
-	complex_vr_container <- RipsComplex$new(data=points, max_edge_length=radius)
+
+	# Standardize input
+	points_std <- standardize_points(points)
+
+	# Contrcut VR complex	
+	complex_vr_container <- RipsComplex$new(data=points_std, max_edge_length=radius)
 	complex_vr <- complex_vr_container$create_simplex_tree(max_dimension=max_dim)
 
-	return( barycenters(complex_vr, points) )
+	# Return list of points
+	return( barycenters(complex_vr, points_std) )
 }
 
 
 sparsification <- function(points, min_dist){
 
-	points_list <- standardize_points(points)
+	output <- standardize_points(points) # Standardize input
+		%>% sparsify_point_set((min_dist)**2) # Apply Python function
 
-	# Return Python function
-	return( sparsify_point_set(points_list, (min_dist)**2) )
+	# Return output
+	return( output )
 }
 
 
 gridification <- function(points, grid_interval, grid_origin){
-	return( 1 )
+
+	output <- standardize_points(points) # Standardize input
+		%>% lapply(function(x) x-grid_origin) # Subtract origin
+		%>% lapply(function(x) sapply(x,function(y) y %/% grid_interval)) # Divide by grid interval
+		%>% unique() # Take only unique values
+
+	# Return output
+	return( output )
 }
 
 
