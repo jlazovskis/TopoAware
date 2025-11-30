@@ -25,7 +25,7 @@ The code in this repository is actively being developed by [@jlazovskis](https:/
   - [x] Python example notebook
   - [ ] Computing and comparing persistence in notebook
 - R tasks
-  - [ ] R code
+  - [X] R code
   - [ ] R example file
   - [x] Full import of `subsampling` module into `rgudhi` (as [fork of rgudhi](https://github.com/jlazovskis/rgudhi-subsampling))
 - C++ tasks

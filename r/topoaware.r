@@ -106,6 +106,17 @@ complement <- function(grid, grid_interval=0, buffer=2){
 }
 
 
-thickening <- function(points, grid_interval=0){
-	return( 1 )
+thickening <- function(grid, grid_interval=0){
+
+	# Construct directions to expand
+	directions <- (expand.grid(rep(list(c(0,1,2)),length(grid[1][[1]]))) - 1) * grid_interval
+
+	# Construct output
+	output <- list()
+	for (i in 1:nrow(directions)){
+		output <- append(output,lapply(X,function(x) x-as.numeric(directions[i,])))
+	}
+
+	# Return unique points
+	return( unique(output) )
 }
