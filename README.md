@@ -27,7 +27,7 @@ The code in this repository is actively being developed by [@jlazovskis](https:/
 - R tasks
   - [ ] R code
   - [ ] R example file
-  - [ ] Full import of `subsampling` module into `rgudhi` (currently relies on [fork of rgudhi](https://github.com/jlazovskis/rgudhi-subsampling))
+  - [x] Full import of `subsampling` module into `rgudhi` (as [fork of rgudhi](https://github.com/jlazovskis/rgudhi-subsampling))
 - C++ tasks
   - [ ] C++ header files
   - [ ] C++ example files
