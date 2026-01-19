@@ -7,7 +7,7 @@
 int main() {
 
 	// Prepare example data
-	topoaware::point_cloud generated_data;
+	std::vector< topoaware::point > generated_data;
 	std::ifstream input_stream( "../../examples/generated_data.csv" );
     std::string cur_line;
 
@@ -24,6 +24,9 @@ int main() {
     	}
     	line_counter++;
     }
+
+    // Initiate point cloud class
+    topoaware::point_cloud data;
 
     return 1;
 }
