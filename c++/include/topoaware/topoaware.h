@@ -23,11 +23,29 @@ namespace topoaware
 			// vector of points
 			std::vector< point > points; 
 
+			// dimension
+			index dim;
+
 		public:
 
-			void set_points( std::vector< point >& );
-
-			void get_points( std::vector< point >& );
+			void set_points( std::vector< point >& vector_in ) {
+				points = vector_in;
+				dim = points[0].size();
+			}
+			void get_points( std::vector< point >& vector_out ) {
+				vector_out = points;
+			}
+			void add_point( point point_in ) {
+				points.push_back(point_in);
+			}
+			void print_points() {
+				for ( point p : points ) {
+					for ( value v : p ) {
+						std::cout << v << " ";
+					}
+				std::cout << std::endl;
+				}
+			}
 
 			// constructor
 			point_cloud() {};
@@ -44,7 +62,22 @@ namespace topoaware
   				rips_complex_from_points.create_complex(stree, max_dim);
 
   				// get barycenters and return
-  		
+				std::vector< point > data_new;
+				for (auto simplex : stree.complex_simplex_range()) {
+					point new_vertex(dim, 0.0);
+					index vertex_num = 0;
+    				for (auto vertex : stree.simplex_vertex_range(simplex)) {
+    					vertex_num++;
+    					for (index cur_dim=0; cur_dim<dim; cur_dim++) {
+	      					new_vertex[cur_dim] += points[vertex][cur_dim];
+	      				}
+    				}
+    				for (index cur_dim=0; cur_dim<dim; cur_dim++) {
+    					new_vertex[cur_dim] /= vertex_num;
+    				}
+    				data_new.push_back(new_vertex);
+				}
+				set_points(data_new);
 			};
 
 			// sparsify point cloud
