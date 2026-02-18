@@ -6,14 +6,19 @@
 #include <gudhi/Simplex_tree.h>
 #include <gudhi/distance_functions.h>
 #include <gudhi/sparsify_point_set.h>
+#include <CGAL/Epick_d.h>
 
 namespace topoaware
 	{
 
-	// types
+	// types for topoaware
     typedef int64_t index;
 	typedef double value;
 	typedef std::vector< value > point;
+
+	// types for CGAL
+	typedef CGAL::Epick_d< CGAL::Dynamic_dimension_tag > kernel;
+	typedef typename kernel::Point_d Point_d;
 
 	// class
 	class point_cloud
@@ -50,7 +55,7 @@ namespace topoaware
 			// constructor
 			point_cloud() {};
 
-			// add barycentric subdivision to point cloud
+			// perform barycentric subdivision on point cloud
 			void barycentric_subdivision(value radius, index max_dim){
 				using Simplex_tree = Gudhi::Simplex_tree<Gudhi::Simplex_tree_options_default>;
   				using Filtration_value = Simplex_tree::Filtration_value;
@@ -61,7 +66,7 @@ namespace topoaware
   				Simplex_tree stree;
   				rips_complex_from_points.create_complex(stree, max_dim);
 
-  				// get barycenters and return
+  				// get barycenters and set
 				std::vector< point > data_new;
 				for (auto simplex : stree.complex_simplex_range()) {
 					point new_vertex(dim, 0.0);
@@ -81,7 +86,21 @@ namespace topoaware
 			};
 
 			// sparsify point cloud
-			void sparsification(value min_dist){};
+			void sparsification(value min_dist){
+
+				// create the point cloud as a CGAL kernel
+				std::vector<Point_d> points_asCGAL;
+				for ( auto p : points ) {
+					Point_d current_point(dim, p.begin(), p.end());
+					points_asCGAL.push_back(current_point);
+				}
+
+				// sparsify and set
+				std::vector< point > data_new;
+				kernel new_kernel;
+				Gudhi::subsampling::sparsify_point_set(new_kernel, points_asCGAL, min_dist*min_dist, std::back_inserter(data_new));
+				set_points(data_new);
+			};
 
 			// align point cloud to grid
 			void gridification(value grid_interval, point grid_origin){};

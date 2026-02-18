@@ -41,7 +41,11 @@ int main() {
     std::cout << "------------" << std::endl;
 
     // Barycentric subdivision
-    data.barycentric_subdivision( 0.2, 2 );
+    // data.barycentric_subdivision( 0.2, 2 );
+    // data.print_points();
+
+    // Sparsification
+    data.sparsification( 0.2 );
     data.print_points();
 
     return 1;
