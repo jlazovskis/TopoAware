@@ -2,6 +2,7 @@
 // Author: Jānis Lazovskis, 2025
 
 // external libraries
+#include <cmath>
 #include <gudhi/Rips_complex.h>
 #include <gudhi/Simplex_tree.h>
 #include <gudhi/distance_functions.h>
@@ -19,6 +20,11 @@ namespace topoaware
 	// types for CGAL
 	typedef CGAL::Epick_d< CGAL::Dynamic_dimension_tag > kernel;
 	typedef typename kernel::Point_d Point_d;
+
+	// compute quotient for float division
+	index quotient(value numerator, value denominator) {
+		return (index)((numerator - std::fmod(numerator, denominator)) / denominator);
+	}
 
 	// class
 	class point_cloud
@@ -103,7 +109,27 @@ namespace topoaware
 			};
 
 			// align point cloud to grid
-			void gridification(value grid_interval, point grid_origin){};
+			void gridification(value grid_interval, point grid_origin){
+
+				// create set container 
+				std::set<point> data_set;
+
+				// add elements from points to set
+				for ( point p : points ){
+					point np;
+				    for (int d=0; d<dim; d++){
+				    	np.push_back(grid_origin[d] + grid_interval*topoaware::quotient(p[d]-grid_origin[d], grid_interval));
+				    }
+				    data_set.insert(np);
+				}
+
+				// create new point container and replace
+				std::vector< point > data_new;
+				for (auto it = data_set.begin(); it != data_set.end(); ++it) {
+					data_new.push_back(*it);
+			    }
+				set_points(data_new);
+			};
 
 			// only when point cloud is on grid
 			// construct ``complement'' of point cloud

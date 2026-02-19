@@ -45,7 +45,11 @@ int main() {
     // data.print_points();
 
     // Sparsification
-    data.sparsification( 0.2 );
+    // data.sparsification( 0.2 );
+    // data.print_points();
+
+    // Gridification
+    data.gridification(1.1, {0.1,0.2});
     data.print_points();
 
     return 1;
