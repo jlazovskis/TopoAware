@@ -2,6 +2,7 @@
 // Author: Jānis Lazovskis, 2025
 
 // external libraries
+#include <cassert>
 #include <cmath>
 #include <gudhi/Rips_complex.h>
 #include <gudhi/Simplex_tree.h>
@@ -30,12 +31,9 @@ namespace topoaware
 	class point_cloud
 		{
 		private:
-
-			// vector of points
-			std::vector< point > points; 
-
-			// dimension
-			index dim;
+			std::vector< point > points; 	// vector of points
+			index dim;						// dimension
+			bool is_grid;					// flag whether or not is grid
 
 		public:
 
@@ -111,7 +109,8 @@ namespace topoaware
 			// align point cloud to grid
 			void gridification(value grid_interval, point grid_origin){
 
-				// create set container 
+				// initialize 
+				assert (grid_origin.size() == points[0].size());
 				std::set<point> data_set;
 
 				// add elements from points to set
@@ -124,16 +123,73 @@ namespace topoaware
 				}
 
 				// create new point container and replace
-				std::vector< point > data_new;
+				std::vector<point> data_new;
 				for (auto it = data_set.begin(); it != data_set.end(); ++it) {
 					data_new.push_back(*it);
 			    }
 				set_points(data_new);
 			};
 
-			// only when point cloud is on grid
-			// construct ``complement'' of point cloud
-			void complement(value grid_interval, index buffer){};
+			// construct complement of a grid
+			void complement(value grid_interval, index buffer){
+
+				// get boundaries and ranges
+				point bdry_min = points[0];
+				point bdry_max = points[0];
+				for ( point p : points ){
+				    for (int d=0; d<dim; d++){
+				    	if ( p[d] < bdry_min[d] ){ bdry_min[d]=p[d]; }
+				    	if ( p[d] > bdry_max[d] ){ bdry_max[d]=p[d]; }
+				    }
+				}
+				std::vector<index> ranges;
+			    for (int d=0; d<dim; d++){
+			    	ranges.push_back(std::round(1+(bdry_max[d]-bdry_min[d])/grid_interval));
+			    }
+
+			    // get max index
+			    index ind_max = 1;
+			    for (int d=0; d<dim; d++){ ind_max = ind_max*(2*buffer + ranges[d]); }
+				
+			    // get indices that should be skipped
+				std::set<index> data_indices;
+				for ( point p : points ){
+					index data_index = 0;
+					index data_coeff = 1;
+				    for (int d=0; d<dim; d++){
+						data_index += std::round(buffer + (p[d]-bdry_min[d])/grid_interval)*data_coeff;
+						data_coeff *= ( ranges[d]+2*buffer );
+					}
+					data_indices.insert(data_index);
+				}
+
+				// construct new data without indices to skip
+				std::vector<point> data_new;
+				index ind_current = 0;
+				auto it = data_indices.begin();
+				index ind_skip = *it;
+				while ( ind_current<ind_max ){
+					while ( ind_current<ind_skip ){
+						point np;
+						index coeff_mod = 1;
+						index coeff_denom = 1;
+				    	for (int d=0; d<dim; d++){
+				    		coeff_mod *= ranges[d]+2*buffer;
+				    		np.push_back( (bdry_min[d]-buffer*grid_interval) + ((ind_current % coeff_mod) / coeff_denom)*grid_interval );
+				    		coeff_denom *= ranges[d]+2*buffer;
+				    	}
+			    		data_new.push_back(np);
+						ind_current++;
+					}
+					it++;
+					if ( it == data_indices.end() ){ ind_skip = ind_max; }
+					else { ind_skip = *it; }
+					ind_current++;
+				}
+
+				// replace
+				set_points(data_new);
+			};
 
 			// only when point cloud is on grid
 			// construct thickening of point cloud

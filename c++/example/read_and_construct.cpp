@@ -51,6 +51,12 @@ int main() {
     // Gridification
     data.gridification(1.1, {0.1,0.2});
     data.print_points();
+    
+    std::cout << "------------" << std::endl;
+
+    // Complement
+    data.complement(1.1, 2);
+    data.print_points();
 
     return 1;
 }
