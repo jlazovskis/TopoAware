@@ -33,7 +33,6 @@ namespace topoaware
 		private:
 			std::vector< point > points; 	// vector of points
 			index dim;						// dimension
-			bool is_grid;					// flag whether or not is grid
 
 		public:
 
@@ -191,9 +190,43 @@ namespace topoaware
 				set_points(data_new);
 			};
 
-			// only when point cloud is on grid
 			// construct thickening of point cloud
-			void thickening(value grid_interval){};
+			void thickening(value grid_interval){
+
+				// initialize containers
+				std::set<point> data_set;
+				std::vector<point> directions = {{-1},{0},{1}};
+			    for (int d=1; d<dim; d++){
+			    	std::vector<point> temp_directions;
+			    	for (point dir : directions){
+			    		point temp_point = dir;
+			    		temp_point.push_back(-1);
+			    		temp_point.push_back(0);
+			    		temp_point.push_back(1);
+			    		temp_directions.push_back(temp_point);
+			    	}
+			    	directions = temp_directions;
+			    }
+
+				// iterate over points and dimensions
+				for (point p : points){
+					for (point dir : directions){
+		    			point np;
+			    		for (int d=0; d<dim; d++){
+			    			np.push_back(p[d] + dir[d]*grid_interval);
+			    		}
+			    		data_set.insert(np);
+					}
+				}
+
+				// create new point container and replace
+				std::vector<point> data_new;
+				for (auto it = data_set.begin(); it != data_set.end(); ++it) {
+					data_new.push_back(*it);
+			    }
+				set_points(data_new);				
+			};
+			
 	};
 
 }
