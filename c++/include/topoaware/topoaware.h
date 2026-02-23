@@ -199,11 +199,9 @@ namespace topoaware
 			    for (int d=1; d<dim; d++){
 			    	std::vector<point> temp_directions;
 			    	for (point dir : directions){
-			    		point temp_point = dir;
-			    		temp_point.push_back(-1);
-			    		temp_point.push_back(0);
-			    		temp_point.push_back(1);
-			    		temp_directions.push_back(temp_point);
+			    		point tp1 = dir; tp1.push_back(-1); temp_directions.push_back(tp1);
+			    		point tp2 = dir; tp2.push_back(0); temp_directions.push_back(tp2);
+			    		point tp3 = dir; tp3.push_back(1); temp_directions.push_back(tp3);
 			    	}
 			    	directions = temp_directions;
 			    }
@@ -226,7 +224,7 @@ namespace topoaware
 			    }
 				set_points(data_new);				
 			};
-			
+
 	};
 
 }

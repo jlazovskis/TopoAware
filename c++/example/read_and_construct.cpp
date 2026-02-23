@@ -55,7 +55,11 @@ int main() {
     std::cout << "------------" << std::endl;
 
     // Complement
-    data.complement(1.1, 2);
+    // data.complement(1.1, 2);
+    // data.print_points();
+
+    // Thickening
+    data.thickening(.55);
     data.print_points();
 
     return 1;
