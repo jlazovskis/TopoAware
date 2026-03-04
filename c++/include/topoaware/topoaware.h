@@ -27,6 +27,18 @@ namespace topoaware
 		return (index)((numerator - std::fmod(numerator, denominator)) / denominator);
 	}
 
+	// compare vectors of floats
+	value tolerance = 0.00001;
+	struct compare_points {
+		bool operator()(point a, point b) const {
+			value min = 2*tolerance;
+			for (int idx=0; idx<a.size(); idx++){
+				min = (a[idx]-b[idx]) < min ? (a[idx]-b[idx]) : min;
+			}
+			return min < -1*tolerance; // rhs < lhs;
+		}
+	};
+
 	// class
 	class point_cloud
 		{
@@ -194,7 +206,7 @@ namespace topoaware
 			void thickening(value grid_interval){
 
 				// initialize containers
-				std::set<point> data_set;
+				std::set<point, compare_points> data_set;
 				std::vector<point> directions = {{-1},{0},{1}};
 			    for (int d=1; d<dim; d++){
 			    	std::vector<point> temp_directions;
