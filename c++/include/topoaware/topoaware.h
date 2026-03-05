@@ -31,11 +31,10 @@ namespace topoaware
 	value tolerance = 0.00001;
 	struct compare_points {
 		bool operator()(point a, point b) const {
-			value min = 2*tolerance;
-			for (int idx=0; idx<a.size(); idx++){
-				min = (a[idx]-b[idx]) < min ? (a[idx]-b[idx]) : min;
-			}
-			return min < -1*tolerance; // rhs < lhs;
+			index cur_dim = 0;
+			while ( (cur_dim < a.size()) && (std::abs(a[cur_dim] - b[cur_dim]) < tolerance) ) { cur_dim += 1; }
+			if ( cur_dim == a.size() ) { return false; }
+			else { return a[cur_dim] < b[cur_dim]; } // rhs < lhs; 
 		}
 	};
 
