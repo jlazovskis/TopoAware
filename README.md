@@ -30,6 +30,6 @@ The code in this repository is actively being developed by [@jlazovskis](https:/
   - [ ] R example file
   - [x] Full import of `subsampling` module into `rgudhi` (as [fork of rgudhi](https://github.com/jlazovskis/rgudhi-subsampling))
 - C++ tasks
-  - [ ] C++ header files
-  - [ ] C++ example files
+  - [X] C++ header files
+  - [X] C++ example files
   - [ ] Set up C++ example files to be compiled with cmake

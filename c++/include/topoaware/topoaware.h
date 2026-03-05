@@ -66,6 +66,17 @@ namespace topoaware
 				}
 			}
 
+			void export_points( std::string filename ) {
+	            std::ofstream output_stream( filename.c_str() );
+				for ( point p : points ) {
+					for ( value v : p ) {
+						output_stream << v << " ";
+					}
+				output_stream << std::endl;
+				}
+            output_stream.close();
+			}
+
 			// constructor
 			point_cloud() {};
 
