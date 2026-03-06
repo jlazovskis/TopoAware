@@ -1,7 +1,7 @@
 // This is an example file for TopoAware 
 // Author: Jānis Lazovskis, 2026
 
-// Example compilation: g++ -o example -I ../include/ -I ../../../gudhi.3.11.0/include/ read_and_construct.cpp
+// Example compilation: g++ -o example -I ../include/ -I ../../../gudhi.3.11.0/include/ example.cpp
 
 #include <fstream>
 #include <topoaware/topoaware.h>
