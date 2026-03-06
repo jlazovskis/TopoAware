@@ -29,7 +29,9 @@ The code in this repository is actively being developed by [@jlazovskis](https:/
   - [X] R code
   - [ ] R example file
   - [x] Full import of `subsampling` module into `rgudhi` (as [fork of rgudhi](https://github.com/jlazovskis/rgudhi-subsampling))
+  - [ ] Computing and comparing persistence in example file
 - C++ tasks
   - [X] C++ header files
   - [X] C++ example files
+  - [ ] Computing and comparing persistence in example file
   - [ ] Set up C++ example files to be compiled with cmake

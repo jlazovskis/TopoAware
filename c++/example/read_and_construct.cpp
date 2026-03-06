@@ -12,12 +12,11 @@ int main() {
 	std::vector< topoaware::point > generated_data;
 	std::ifstream input_stream( "../../examples/generated_data.csv" );
     std::string cur_line;
-    int line_counter = 0;
 
     // Skip header
     std::getline(input_stream, cur_line);
-    while (std::getline(input_stream, cur_line) && line_counter < 10)
-    {
+    while (std::getline(input_stream, cur_line)) {
+
         // skip empty lines
         if (cur_line.empty()) continue;
 
@@ -29,7 +28,6 @@ int main() {
             cur_point.push_back(std::stod(cur_value));
         }
         generated_data.push_back(cur_point);
-        line_counter++;
     }
     input_stream.close();
 

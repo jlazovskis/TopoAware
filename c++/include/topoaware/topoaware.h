@@ -27,9 +27,9 @@ namespace topoaware
 		return (index)((numerator - std::fmod(numerator, denominator)) / denominator);
 	}
 
-	// compare vectors of floats
+	// compare vectors of floats by lexicographic order
 	value tolerance = 0.00001;
-	struct compare_points {
+	struct lexicographic_order {
 		bool operator()(point a, point b) const {
 			index cur_dim = 0;
 			while ( (cur_dim < a.size()) && (std::abs(a[cur_dim] - b[cur_dim]) < tolerance) ) { cur_dim += 1; }
@@ -216,7 +216,7 @@ namespace topoaware
 			void thickening(value grid_interval){
 
 				// initialize containers
-				std::set<point, compare_points> data_set;
+				std::set<point, lexicographic_order> data_set;
 				std::vector<point> directions = {{-1},{0},{1}};
 			    for (int d=1; d<dim; d++){
 			    	std::vector<point> temp_directions;
