@@ -36,10 +36,10 @@ barycenters <- function(simplex_tree, points){
 	points_std <- standardize_points(points)
 
 	# Construct output
-	output <- st$get_simplices()$simplex # Access simplex indices
-		%>% lapply(function(x) x+1) # From 0-indexed to 1-indexed
-		%>% lapply(function(x) do.call(rbind,lapply(x,function(y) X[[y]]))) # Get points
-		%>% lapply(function(x) apply(x,2,mean)) # Take average
+	output <- st$get_simplices()$simplex %>% # Access simplex indices
+		lapply(function(x) x+1) %>% # From 0-indexed to 1-indexed
+		lapply(function(x) do.call(rbind,lapply(x,function(y) X[[y]]))) %>% # Get points
+		lapply(function(x) apply(x,2,mean)) # Take average
 
 	return( output )
 }
@@ -61,8 +61,8 @@ barycentric_subdivision <- function(points, radius, max_dim=2){
 
 sparsification <- function(points, min_dist){
 
-	output <- standardize_points(points) # Standardize input
-		%>% sparsify_point_set((min_dist)**2) # Apply Python function
+	output <- standardize_points(points) %>% # Standardize input
+		sparsify_point_set((min_dist)**2) # Apply Python function
 
 	# Return output
 	return( output )
@@ -71,10 +71,10 @@ sparsification <- function(points, min_dist){
 
 gridification <- function(points, grid_interval, grid_origin){
 
-	output <- standardize_points(points) # Standardize input
-		%>% lapply(function(x) x-grid_origin) # Subtract origin
-		%>% lapply(function(x) sapply(x,function(y) y %/% grid_interval)) # Divide by grid interval
-		%>% unique() # Take only unique values
+	output <- standardize_points(points) %>% # Standardize input
+		lapply(function(x) x-grid_origin) %>% # Subtract origin
+		lapply(function(x) sapply(x,function(y) y %/% grid_interval)) %>% # Divide by grid interval
+		unique() # Take only unique values
 
 	# Return output
 	return( output )
@@ -98,9 +98,9 @@ complement <- function(grid, grid_interval=0, buffer=2){
 	}
 
 	# Construct output
-	output <- which(mask_array==TRUE, arr.ind=TRUE) # Get correct indices
-		%>% apply(1, function(x) do.call(rbind,lapply(x, function(y) y*grid_interval))) # Get values
-		%>% apply(1, identity, simplify=FALSE) # Make as list of numeric
+	output <- which(mask_array==TRUE, arr.ind=TRUE) %>% # Get correct indices
+		apply(1, function(x) do.call(rbind,lapply(x, function(y) y*grid_interval))) %>% # Get values
+		apply(1, identity, simplify=FALSE) # Make as list of numeric
 
 	return( output )
 }
