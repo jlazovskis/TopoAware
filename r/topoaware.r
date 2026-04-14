@@ -10,8 +10,7 @@ standardize_points <- function(input) {
 
 	# Convert from data frame if necessary
 	if (class(input) == "data.frame"){
-		output <- apply(input, 1, as.numeric)
-		output <- split(input, seq(ncol(points_list)))
+		output <- apply(input, 1, as.numeric) %>% t
 	}
 	else {
 		stopifnot(class(input) == "list")
@@ -61,10 +60,19 @@ barycentric_subdivision <- function(points, radius, max_dim=2){
 
 sparsification <- function(points, min_dist){
 
-	output <- standardize_points(points) %>% # Standardize input
-		sparsify_point_set((min_dist)**2) # Apply Python function
+	# Record column names
+	points_colnames <- colnames(points)
 
-	# Return output
+	output <- standardize_points(points) %>%	# Standardize input
+		sparsify_point_set((min_dist)**2) %>%	# Apply Python function
+		unlist %>%								# Remove all structure
+		matrix(ncol=len(points_colnames)) %>%	# Make into a matrix
+		as.data.frame							# Make into a dataframe
+
+	# Rename columns
+	colnames(output) <- points_colnames
+
+	# Return
 	return( output )
 }
 
